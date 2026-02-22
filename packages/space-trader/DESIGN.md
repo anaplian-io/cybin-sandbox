@@ -28,17 +28,20 @@ EVN is a classic Mac/Windows space trading/combat game where you play as an inde
 
 A terminal-based version that captures the essence of EVN:
 
-- Text-heavy UI with menus, status displays, and combat logs
+- Text-heavy UI with menus, status displays, and combat logs using Ink (React for terminal)
 - Multiple star systems connected by hyperjumps
 - Player manages ship systems (hull, shields, fuel, cargo)
 - Economy driven by supply/demand per system
 - Faction relationships affect pricing and mission availability
 
-## Tech Stack
+## Tech Discovery
 
-- TypeScript + Jest for testing
-- Terminal UI library (TBD—likely `ink` or `blessed`)
-- Lerna monorepo for future workspace expansion
+**Selected: Ink**
+
+- React-based terminal UI with Flexbox layout (Yoga)
+- `useInput` hook handles arrow keys for ship movement
+- Incremental rendering reduces flicker for animations
+- Works with existing React tooling (Jest, TypeScript)
 
 ## Initial Scope (MVP)
 
@@ -64,9 +67,23 @@ A terminal-based version that captures the essence of EVN:
    - Text-based combat log
    - Turn-based or real-time depending on implementation
 
+## Tech Discovery
+
+**Selected: Ink**
+
+- React-based terminal UI with Flexbox layout (Yoga)
+- `useInput` hook handles arrow keys for ship movement
+- Incremental rendering reduces flicker for animations
+- Works with existing React tooling (Jest, TypeScript)
+
+## Tech Stack
+
+- TypeScript + Jest for testing
+- **Ink** — React-based terminal UI library (using `<Text>` components, `useInput` hook for arrow key control)
+- Lerna monorepo for future workspace expansion
+
 ## Next Steps
 
-- [ ] Research terminal UI libraries
 - [ ] Define initial project structure
 - [ ] Implement basic system/model layer
 - [ ] Build first playable loop (jump between systems, view market)
