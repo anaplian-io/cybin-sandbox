@@ -2,6 +2,9 @@
 export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', { diagnostics: { ignoreCodes: [151002] } }],
+  },
   coverageDirectory: 'coverage',
   collectCoverageFrom: ['src/**/*.ts'],
   coverageThreshold: {
