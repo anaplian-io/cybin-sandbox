@@ -22,12 +22,10 @@ export function ShipGame() {
   return (
     <div>
       <Text>Use arrow keys to move the ship</Text>
-      <Text>{'\n'}</Text>
+      <Text />
       <Text>
         Position: ({position.x}, {position.y})
       </Text>
-      <Text>{'\n'}</Text>
-      <Text>Ship: 🚀</Text>
     </div>
   );
 }
