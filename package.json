@@ -12,6 +12,7 @@
     "build": "npm run lint && npm run build:ts",
     "test": "npm run test:ts",
     "ci": "npm run build && npm run test",
+    "clean": "rm -rf node_modules packages/*/node_modules",
     "prepare": "husky"
   },
   "type": "module",
@@ -20,6 +21,9 @@
     "url": "git+https://github.com/anaplian-io/cybin-sandbox.git"
   },
   "keywords": [],
+  "workspaces": [
+    "packages/*"
+  ],
   "author": "Ethan Fortner",
   "license": "MIT",
   "bugs": {
