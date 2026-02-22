@@ -3,7 +3,7 @@ export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
   coverageDirectory: 'coverage',
-  collectCoverageFrom: ['src/**/*.ts', '!src/index.tsx'],
+  collectCoverageFrom: ['src/**/*.ts'],
   coverageThreshold: {
     global: {
       branches: 100,

@@ -1,22 +1,29 @@
 import { render, Text } from 'ink';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useInput } from 'ink';
+import { Ship } from './ship';
 
 type Position = { x: number; y: number };
 
 export function ShipGame() {
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
+  const ship = new Ship();
+
+  useEffect(() => {
+    setPosition(ship.getPosition());
+  }, []);
 
   useInput((input, key) => {
     if (key.upArrow) {
-      setPosition((prev) => ({ ...prev, y: prev.y - 1 }));
+      ship.moveUp();
     } else if (key.downArrow) {
-      setPosition((prev) => ({ ...prev, y: prev.y + 1 }));
+      ship.moveDown();
     } else if (key.leftArrow) {
-      setPosition((prev) => ({ ...prev, x: prev.x - 1 }));
+      ship.moveLeft();
     } else if (key.rightArrow) {
-      setPosition((prev) => ({ ...prev, x: prev.x + 1 }));
+      ship.moveRight();
     }
+    setPosition(ship.getPosition());
   });
 
   return (
