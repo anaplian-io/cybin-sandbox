@@ -24,4 +24,4 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm install --workspaces
-      - run: npm run ci
+      - run: npm run release

@@ -11,7 +11,7 @@
     "test:ts": "lerna run test --stream",
     "build": "npm run lint && npm run build:ts",
     "test": "npm run test:ts",
-    "ci": "npm run build && npm run test",
+    "release": "npm run build && npm run test",
     "clean": "rm -rf node_modules packages/*/node_modules",
     "prepare": "husky"
   },
