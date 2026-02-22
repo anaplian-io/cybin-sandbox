@@ -1,4 +1,4 @@
-import { checkSystem } from './game.js';
+import { checkSystem } from './game';
 
 test('checkSystem returns true', () => {
   expect(checkSystem()).toBe(true);
