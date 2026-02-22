@@ -7,7 +7,10 @@
     "format:ts": "eslint . --fix && prettier --write .",
     "lint": "npm run lint:ts",
     "format": "npm run format:ts",
-    "build": "npm run lint",
+    "build:ts": "lerna run build --stream",
+    "test:ts": "lerna run test --stream",
+    "build": "npm run lint && npm run build:ts",
+    "test": "npm run test:ts",
     "prepare": "husky"
   },
   "type": "module",
