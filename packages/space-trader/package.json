@@ -1,5 +1,5 @@
 {
-  "name": "@cybin/space-trader",
+  "name": "@anaplian/space-trader",
   "version": "0.1.0",
   "description": "A terminal-based space trader game",
   "main": "dist/index.js",
