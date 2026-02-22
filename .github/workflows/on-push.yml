@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, and run linting checks on pushes to main
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: CI on Merge
+name: CI on Main
 
 on:
   push:
@@ -23,4 +23,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm ci
-      - run: npm run build
+      - run: npm run ci
