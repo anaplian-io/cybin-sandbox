@@ -1,89 +1,106 @@
-# Space Trader - Terminal Edition
+# Whale Song: Nomadic Skybound
 
-A rough clone of **Escape Velocity Nova** for the terminal, written in TypeScript.
+A terminal-based game about riding a domesticated sky-whale through floating archipelagos, breeding better whales, and interacting with nomadic factions.
 
-## Inspiration: Escape Velocity Nova
+## Inspiration
 
-EVN is a classic Mac/Windows space trading/combat game where you play as an independent pilot in a three-way cold war between:
+- **Escape Velocity Nova** — Open-world exploration, reputation systems, faction interactions
+- **Skywhale nomadism** — Living aboard a giant creature that's both transport and home
+- **Passive ecosystem simulation** — Wild creatures evolving around you without direct intervention
 
-- **Federation of United Planets** (democratic but corrupt)
-- **Auroran Empire** (brutal yet skilled)
-- **Polaris** (utopic but xenophobic)
+## Core Gameplay Loop
 
-### Core Gameplay
+1. **Ride your sky-whale** through a grid-based sky map
+2. **Discover waystations and floating islands** scattered across the archipelago
+3. **Breeding = Modding** — Select traits when breeding your whale with wild pods (no combat modding)
+4. **Interact with other nomads** at waystations for trading, gossip, and missions
+5. **Watch wild pods evolve** based on environmental pressures (storms, air currents)
 
-1. Start as a freelance pilot in a shuttlecraft
-2. Make money through trading, missions, or combat
-3. Build reputation with factions
-4. Get recruited into one of three main storylines
+## Key Mechanics
 
-### Key Mechanics
-
-- **Trading**: Buy low, sell high across star systems
-- **Combat**: Dogfight pirates and enemy ships
-- **Missions**: Deliver cargo, escort ships, assassinate targets
-- **Reputation**: Your choices affect faction standings
-
-## Game Concept for This Project
-
-A terminal-based version that captures the essence of EVN:
-
-- Text-heavy UI with menus, status displays, and combat logs using Ink (React for terminal)
-- Multiple star systems connected by hyperjumps
-- Player manages ship systems (hull, shields, fuel, cargo)
-- Economy driven by supply/demand per system
-- Faction relationships affect pricing and mission availability
+- **Navigation**: Arrow keys move your whale across airspace tiles
+- **Breeding/Modding**: At waystations, select traits when breeding (speed, carrying capacity, resilience, special abilities)
+- **Resources**: Sky-whales produce "aether mist" you can harvest/sell
+- **Simulation**: Wild whale pods evolve passively—storms select for heat resistance, calm zones favor speed
+- **Non-violent Conflict**: Compete for breeding grounds via trade/gossip influence; avoid dangerous air currents
 
 ## Tech Discovery
 
 **Selected: Ink**
 
 - React-based terminal UI with Flexbox layout (Yoga)
-- `useInput` hook handles arrow keys for ship movement
-- Incremental rendering reduces flicker for animations
+- `useInput` hook handles arrow keys for whale movement
+- Incremental rendering reduces flicker for map updates
 - Works with existing React tooling (Jest, TypeScript)
 
-## Initial Scope (MVP)
+**Why Ink Works:**
 
-1. **System Overview Screen**
-   - Current system name
-   - Ship status (hull, shields, fuel, cargo weight)
-   - Credits
-
-2. **Space View**
-   - List of neighboring systems
-   - Jump to system (costs fuel)
-
-3. **Planetary Market**
-   - List of goods available for purchase
-   - Current prices per system
-   - Buy/sell interface
-
-4. **Mission Board**
-   - Available missions from faction representatives
-   - Mission rewards and requirements
-
-5. **Combat System (simplified)**
-   - Text-based combat log
-   - Turn-based or real-time depending on implementation
-
-## Tech Discovery
-
-**Selected: Ink**
-
-- React-based terminal UI with Flexbox layout (Yoga)
-- `useInput` hook handles arrow keys for ship movement
-- Incremental rendering reduces flicker for animations
-- Works with existing React tooling (Jest, TypeScript)
+- Grid-based movement maps naturally to terminal ASCII art
+- Text logs for evolution events ("Whale pod developed thermal tolerance")
+- Menu-driven breeding selection fits Ink's component system
+- No graphics engine needed—creatures represented by ASCII symbols (🐳, ⚓, ☁️)
 
 ## Tech Stack
 
 - TypeScript + Jest for testing
-- **Ink** — React-based terminal UI library (using `<Text>` components, `useInput` hook for arrow key control)
-- Lerna monorepo for future workspace expansion
+- **Ink** — React-based terminal UI library (`<Text>`, `useInput` hooks)
+- Lerna monorepo for future workspace expansion (if we add minigames or separate systems)
+
+## Game World
+
+### Sky Layers
+
+- **Upper Atmosphere** — Turbulent, fast currents, rare资源 (astral crystals)
+- **Main Sky** — Balanced currents, common islands, typical whale pods
+- **Lower Atmosphere** — Calm, slow movement, lush bioluminescent flora
+
+### Creature Types
+
+- **Domesticated Whales** — Your ride; traits affect speed, capacity, special abilities
+- **Wild Pods** — Evolve passively; can be bred into your lineage
+- **Sky Predators** — Avoidance mechanic (not combat); certain traits deter predators
+
+### Waystations
+
+- **Trading Outposts** — Buy/sell goods, trade whale genes
+- **Gossip Hubs** — Learn about faction standings, hidden islands
+- **Breeding Sanctuaries** — Specialized facilities for advanced trait selection
+
+## Initial Scope (MVP)
+
+1. **Sky Map View**
+   - Grid-based map with your whale (`🐳`) and landmarks
+   - Arrow key movement (one tile = one "step" through the sky)
+   - Waystations shown as `⚓`, islands as `☁️`
+
+2. **Whale Status Screen**
+   - Health, current traits (inherited from parents)
+   - Aether mist production rate
+   - Available breeding pairings
+
+3. **Breeding Menu**
+   - Select from available wild pods at waystations
+   - Trait selection interface (dominant/recessive markers)
+   - Display potential offspring traits
+
+4. **Waystation Interaction**
+   - Trade interface (goods ↔ aether mist)
+   - Gossip log (faction updates, rumors)
+   - Mission board (delivery requests, exploration targets)
+
+5. **Evolution Logs**
+   - Text logs of wild pod evolution ("Pod A developed thermal tolerance")
+   - Days/seasons progression affects environmental pressures
+
+## Future Scope
+
+- **Multiplayer Aspects** — Async interaction with other nomads (message boards, trade posts)
+- **Seasonal Cycles** — Weather patterns change breeding成功率
+- **Whale Evolution Stages** — Juvenile, Adult, Elder (different capabilities)
+- **Minigames** — Simple tasks at waystations (fishing, scanning, navigation puzzles)
 
 ## Next Steps
 
-- [ ] Define initial project structure
-- [ ] Implement basic system/model layer
-- [ ] Build first playable loop (jump between systems, view market)
+- [ ] Define initial project structure (Lerna workspace layout)
+- [ ] Implement core model layer (Whale, Position, Trait system)
+- [ ] Build first playable loop (move whale on grid, visit waystation, breed)
