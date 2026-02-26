@@ -54,7 +54,7 @@ export function MapDisplay({ gameState }: MapProps) {
 }
 
 export function StatusDisplay({ gameState }: { gameState: GameState }) {
-  const { shipPosition, whales, turn } = gameState;
+  const { shipPosition, whales, turn, breedingOpportunity } = gameState;
   const primaryWhale = whales[0];
 
   return (
@@ -67,14 +67,30 @@ export function StatusDisplay({ gameState }: { gameState: GameState }) {
       </Text>
       <Text> | Whale: </Text>
       <Text>{primaryWhale?.name || 'None'}</Text>
+
+      {/* Breeding opportunity indicator */}
+      {breedingOpportunity && (
+        <Text>
+          {'\n'}
+          <Text color="green">Breeding Available at </Text>
+          <Text bold>{breedingOpportunity.locationName}</Text>
+          <Text> (Enter to breed)</Text>
+        </Text>
+      )}
     </Text>
   );
 }
 
-export function ControlsDisplay() {
+export function ControlsDisplay({
+  hasBreedingOpportunity,
+}: {
+  hasBreedingOpportunity: boolean;
+}) {
   return (
     <Text>
-      <Text>&larr; &uarr; &rarr; &darr;: Move | Ctrl+C: Quit</Text>
+      <Text>&larr; &uarr; &rarr; &darr;: Move </Text>
+      {hasBreedingOpportunity && <Text>| Enter: Breed </Text>}
+      <Text>| Ctrl+C: Quit</Text>
     </Text>
   );
 }

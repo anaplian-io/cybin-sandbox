@@ -1,5 +1,5 @@
 import { World, createWorld } from './world';
-import { Whale, createWhale } from './whale';
+import { Whale, createWhale, Trait } from './whale';
 import { BreedingService, RandomGenerator } from './breeding';
 
 export interface Position {
@@ -12,6 +12,10 @@ export interface GameState {
   shipPosition: Position;
   whales: Whale[];
   turn: number;
+  breedingOpportunity?: {
+    locationName: string;
+    availablePods: Whale[];
+  };
 }
 
 export class GameService {
@@ -42,10 +46,22 @@ export class GameService {
   }
 
   moveShip(state: GameState, targetX: number, targetY: number): GameState {
-    // Simple movement - update ship position
+    const tile = state.world.tiles.get(`${targetX},${targetY}`);
+    let breedingOpportunity: GameState['breedingOpportunity'] | undefined;
+
+    // Check if new position is a breeding ground
+    if (tile?.type === 'breedingGround') {
+      const availablePods = this.generateWildPods(state.turn);
+      breedingOpportunity = {
+        locationName: tile.name || 'Breeding Ground',
+        availablePods,
+      };
+    }
+
     return {
       ...state,
       shipPosition: { x: targetX, y: targetY },
+      breedingOpportunity,
     };
   }
 
@@ -53,6 +69,25 @@ export class GameService {
     // For now, just return existing whales
     // Future: add breeding logic using BreedingService when whales share a tile
     return whales;
+  }
+
+  generateWildPods(turn: number): Whale[] {
+    // Generate different wild pods based on turn/season
+    const podCount = Math.floor(turn / 5) + 3; // Increase pods over time
+
+    const traitSets: Trait[][] = [
+      ['speed', 'resilience'],
+      ['capacity', 'thermotolerance'],
+      ['predatorDeterrence', 'resilience'],
+    ];
+
+    const pods: Whale[] = [];
+    for (let i = 0; i < podCount; i++) {
+      const traits = traitSets[i % traitSets.length];
+      pods.push(createWhale(`Wild Pod ${i + 1}`, traits));
+    }
+
+    return pods;
   }
 }
 

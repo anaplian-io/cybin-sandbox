@@ -9,6 +9,7 @@ export interface Tile {
   type: TileType;
   x: number;
   y: number;
+  name?: string; // Named locations (waystations, breeding grounds)
 }
 
 export interface World {
@@ -21,8 +22,9 @@ export function createTile(
   x: number,
   y: number,
   type: TileType = 'empty',
+  name?: string,
 ): Tile {
-  return { x, y, type };
+  return { x, y, type, name };
 }
 
 export function getKey(x: number, y: number): string {
@@ -53,14 +55,27 @@ export function createWorld(width: number = 20, height: number = 15): World {
   }
 
   // Add waystations
-  const waystationPositions = [
-    [7, 7],
-    [12, 5],
+  const waystationPositions: [number, number, string][] = [
+    [7, 7, 'Circuit Waystation'],
+    [12, 5, 'Vortex Outpost'],
   ];
 
-  for (const [x, y] of waystationPositions) {
+  for (const [x, y, name] of waystationPositions) {
     if (x < width && y < height) {
-      tiles.set(getKey(x, y), createTile(x, y, 'waystation'));
+      tiles.set(getKey(x, y), createTile(x, y, 'waystation', name));
+    }
+  }
+
+  // Add breeding grounds
+  const breedingPositions: [number, number, string][] = [
+    [2, 10, 'Whispering Shoals'],
+    [16, 8, 'Aurora Drift'],
+    [9, 2, 'Skyward Nest'],
+  ];
+
+  for (const [x, y, name] of breedingPositions) {
+    if (x < width && y < height) {
+      tiles.set(getKey(x, y), createTile(x, y, 'breedingGround', name));
     }
   }
 
@@ -69,6 +84,11 @@ export function createWorld(width: number = 20, height: number = 15): World {
 
 export function getTile(world: World, x: number, y: number): Tile | undefined {
   return world.tiles.get(getKey(x, y));
+}
+
+export function isBreedingGround(world: World, x: number, y: number): boolean {
+  const tile = world.tiles.get(getKey(x, y));
+  return tile?.type === 'breedingGround';
 }
 
 export function setTile(

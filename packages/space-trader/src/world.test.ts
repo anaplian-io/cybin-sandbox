@@ -1,4 +1,11 @@
-import { createWorld, getTile, setTile, getKey, createTile } from './world';
+import {
+  createWorld,
+  getTile,
+  setTile,
+  getKey,
+  createTile,
+  isBreedingGround,
+} from './world';
 
 describe('World', () => {
   it('creates a world with default dimensions', () => {
@@ -24,11 +31,32 @@ describe('World', () => {
     expect(getTile(world, 10, 8)?.type).toBe('island');
   });
 
-  it('places waystations at specified positions', () => {
+  it('places waystations at specified positions with names', () => {
     const world = createWorld();
 
     expect(getTile(world, 7, 7)?.type).toBe('waystation');
+    expect(getTile(world, 7, 7)?.name).toBe('Circuit Waystation');
     expect(getTile(world, 12, 5)?.type).toBe('waystation');
+    expect(getTile(world, 12, 5)?.name).toBe('Vortex Outpost');
+  });
+
+  it('places breeding grounds at specified positions with names', () => {
+    const world = createWorld();
+
+    expect(getTile(world, 2, 10)?.type).toBe('breedingGround');
+    expect(getTile(world, 2, 10)?.name).toBe('Whispering Shoals');
+    expect(getTile(world, 16, 8)?.type).toBe('breedingGround');
+    expect(getTile(world, 16, 8)?.name).toBe('Aurora Drift');
+    expect(getTile(world, 9, 2)?.type).toBe('breedingGround');
+    expect(getTile(world, 9, 2)?.name).toBe('Skyward Nest');
+  });
+
+  it('identifies breeding grounds', () => {
+    const world = createWorld();
+
+    expect(isBreedingGround(world, 2, 10)).toBe(true);
+    expect(isBreedingGround(world, 7, 7)).toBe(false); // waystation
+    expect(isBreedingGround(world, 5, 5)).toBe(false); // island
   });
 
   it('returns undefined for out of bounds', () => {
@@ -55,5 +83,11 @@ describe('World', () => {
   it('creates a tile with default type', () => {
     const tile = createTile(3, 4);
     expect(tile.type).toBe('empty');
+  });
+
+  it('creates a tile with name', () => {
+    const tile = createTile(3, 4, 'waystation', 'Test Station');
+    expect(tile.type).toBe('waystation');
+    expect(tile.name).toBe('Test Station');
   });
 });
