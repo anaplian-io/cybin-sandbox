@@ -4,6 +4,9 @@
   "description": "A terminal-based space trader game",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "whale-song": "dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest --coverage",
@@ -24,6 +27,7 @@
   },
   "dependencies": {
     "ink": "^6.8.0",
+    "ink-testing-library": "^4.0.0",
     "react": "^19.2.4"
   }
 }
