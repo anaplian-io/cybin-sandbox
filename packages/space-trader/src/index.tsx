@@ -1,40 +1,42 @@
-import { render, Text } from 'ink';
-import React, { useState, useEffect } from 'react';
-import { useInput } from 'ink';
-import { Ship } from './ship';
+import React from 'react';
+import { render, useInput } from 'ink';
+import { MapDisplay, StatusDisplay, ControlsDisplay } from './map';
+import { GameService, GameState } from './game';
 
-type Position = { x: number; y: number };
+const service = new GameService();
 
-export function ShipGame() {
-  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
-  const ship = new Ship();
-
-  useEffect(() => {
-    setPosition(ship.getPosition());
-  }, []);
+function GameApp() {
+  const [state, setState] = React.useState<GameState>(service.initialize());
 
   useInput((input, key) => {
-    if (key.upArrow) {
-      ship.moveUp();
-    } else if (key.downArrow) {
-      ship.moveDown();
-    } else if (key.leftArrow) {
-      ship.moveLeft();
-    } else if (key.rightArrow) {
-      ship.moveRight();
+    // Handle Ctrl+C
+    if (key.ctrl && input === 'c') {
+      process.exit(0);
     }
-    setPosition(ship.getPosition());
+
+    // Handle arrow keys using Ink's key object
+    if (key.upArrow) {
+      const newY = Math.max(0, state.shipPosition.y - 1);
+      setState(service.moveShip(state, state.shipPosition.x, newY));
+    } else if (key.downArrow) {
+      const newY = Math.min(state.world.height - 1, state.shipPosition.y + 1);
+      setState(service.moveShip(state, state.shipPosition.x, newY));
+    } else if (key.rightArrow) {
+      const newX = Math.min(state.world.width - 1, state.shipPosition.x + 1);
+      setState(service.moveShip(state, newX, state.shipPosition.y));
+    } else if (key.leftArrow) {
+      const newX = Math.max(0, state.shipPosition.x - 1);
+      setState(service.moveShip(state, newX, state.shipPosition.y));
+    }
   });
 
   return (
-    <div>
-      <Text>Use arrow keys to move the ship</Text>
-      <Text />
-      <Text>
-        Position: ({position.x}, {position.y})
-      </Text>
-    </div>
+    <>
+      <MapDisplay gameState={state} />
+      <StatusDisplay gameState={state} />
+      <ControlsDisplay />
+    </>
   );
 }
 
-render(<ShipGame />);
+render(<GameApp />);
