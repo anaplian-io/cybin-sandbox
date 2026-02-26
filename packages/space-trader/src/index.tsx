@@ -8,27 +8,23 @@ const service = new GameService();
 function GameApp() {
   const [state, setState] = React.useState<GameState>(service.initialize());
 
-  useInput((input) => {
+  useInput((input, key) => {
     // Handle Ctrl+C
-    if (input === '\u0003') {
+    if (key.ctrl && input === 'c') {
       process.exit(0);
     }
 
-    // Handle arrow keys (escape sequences)
-    if (input === '\u001B[A') {
-      // Up
+    // Handle arrow keys using Ink's key object
+    if (key.upArrow) {
       const newY = Math.max(0, state.shipPosition.y - 1);
       setState(service.moveShip(state, state.shipPosition.x, newY));
-    } else if (input === '\u001B[B') {
-      // Down
+    } else if (key.downArrow) {
       const newY = Math.min(state.world.height - 1, state.shipPosition.y + 1);
       setState(service.moveShip(state, state.shipPosition.x, newY));
-    } else if (input === '\u001B[C') {
-      // Right
+    } else if (key.rightArrow) {
       const newX = Math.min(state.world.width - 1, state.shipPosition.x + 1);
       setState(service.moveShip(state, newX, state.shipPosition.y));
-    } else if (input === '\u001B[D') {
-      // Left
+    } else if (key.leftArrow) {
       const newX = Math.max(0, state.shipPosition.x - 1);
       setState(service.moveShip(state, newX, state.shipPosition.y));
     }
