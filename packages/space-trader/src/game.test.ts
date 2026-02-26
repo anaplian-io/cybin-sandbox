@@ -67,6 +67,42 @@ describe('Game', () => {
       expect(newState.turn).toBe(state.turn);
       expect(newState.whales).toEqual(state.whales);
     });
+
+    it('sets breedingOpportunity when moving to breeding ground', () => {
+      const service = new GameService();
+      const state = service.initialize();
+
+      // Move to a known breeding ground position
+      const newState = service.moveShip(state, 2, 10);
+
+      expect(newState.breedingOpportunity).toBeDefined();
+      expect(newState.breedingOpportunity?.locationName).toBe(
+        'Whispering Shoals',
+      );
+    });
+
+    it('clears breedingOpportunity when moving off breeding ground', () => {
+      const service = new GameService();
+      let state = service.initialize();
+
+      // First move to breeding ground
+      state = service.moveShip(state, 2, 10);
+      expect(state.breedingOpportunity).toBeDefined();
+
+      // Then move away
+      const newState = service.moveShip(state, 3, 10);
+      expect(newState.breedingOpportunity).toBeUndefined();
+    });
+
+    it('does not set breedingOpportunity when moving to non-breeding ground', () => {
+      const service = new GameService();
+      const state = service.initialize();
+
+      // Move to a regular empty tile (not breeding ground)
+      const newState = service.moveShip(state, 1, 0);
+
+      expect(newState.breedingOpportunity).toBeUndefined();
+    });
   });
 
   describe('updateWhalePopulation', () => {
@@ -91,6 +127,40 @@ describe('Game', () => {
       const result = service.updateWhalePopulation(whales);
 
       expect(result).toEqual(whales);
+    });
+  });
+
+  describe('generateWildPods', () => {
+    it('generates wild pods with valid traits', () => {
+      const service = new GameService();
+      const pods = service.generateWildPods(0);
+
+      expect(pods.length).toBeGreaterThan(0);
+      for (const pod of pods) {
+        expect(pod.name).toMatch(/^Wild Pod \d+$/);
+        expect(pod.traits.length).toBeGreaterThan(0);
+        for (const trait of pod.traits) {
+          expect([
+            'speed',
+            'resilience',
+            'capacity',
+            'thermotolerance',
+            'predatorDeterrence',
+          ]).toContain(trait);
+        }
+      }
+    });
+
+    it('increases pod count over time', () => {
+      const service = new GameService();
+
+      // At turn 0, should have ~3 pods
+      const earlyPods = service.generateWildPods(0);
+      expect(earlyPods.length).toBeGreaterThanOrEqual(3);
+
+      // At turn 10, should have more pods
+      const laterPods = service.generateWildPods(10);
+      expect(laterPods.length).toBeGreaterThan(earlyPods.length);
     });
   });
 

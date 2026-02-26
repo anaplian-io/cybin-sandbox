@@ -28,13 +28,18 @@ function GameApp() {
       const newX = Math.max(0, state.shipPosition.x - 1);
       setState(service.moveShip(state, newX, state.shipPosition.y));
     }
+
+    // Handle Enter key for breeding
+    if (key.return && state.breedingOpportunity) {
+      console.log('Breeding menu not yet implemented');
+    }
   });
 
   return (
     <>
       <MapDisplay gameState={state} />
       <StatusDisplay gameState={state} />
-      <ControlsDisplay />
+      <ControlsDisplay hasBreedingOpportunity={!!state.breedingOpportunity} />
     </>
   );
 }
