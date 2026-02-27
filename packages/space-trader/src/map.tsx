@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'ink';
+import { Text, Newline } from 'ink';
 import { GameState } from './game';
 
 interface MapProps {
@@ -91,6 +91,38 @@ export function ControlsDisplay({
       <Text>&larr; &uarr; &rarr; &darr;: Move </Text>
       {hasBreedingOpportunity && <Text>| Enter: Breed </Text>}
       <Text>| Ctrl+C: Quit</Text>
+    </Text>
+  );
+}
+
+export function BreedingMenu({ gameState }: { gameState: GameState }) {
+  const { breedingOpportunity } = gameState;
+
+  if (!breedingOpportunity || !breedingOpportunity.availablePods.length) {
+    return null;
+  }
+
+  return (
+    <Text>
+      <Newline />
+      <Text color="cyan" bold>
+        BREEDING MENU
+      </Text>
+      <Newline />
+      <Text color="cyan">Select a wild pod to breed with your whale:</Text>
+      <Newline />
+      {breedingOpportunity.availablePods.map((pod, index) => {
+        const traitDisplay = pod.traits.join(', ');
+        return (
+          <Text key={index}>
+            <Text color="green">[{index + 1}]</Text> {pod.name}
+            <Text> — Traits: </Text>
+            <Text>{traitDisplay}</Text>
+          </Text>
+        );
+      })}
+      <Newline />
+      <Text color="yellow">Press number key to select, Escape to close</Text>
     </Text>
   );
 }

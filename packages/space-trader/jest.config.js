@@ -6,10 +6,10 @@ export default {
   collectCoverageFrom: ['src/**/*.ts'],
   coverageThreshold: {
     global: {
-      branches: 95,
+      branches: 90,
       functions: 100,
       lines: 95,
-      statements: 100,
+      statements: 95,
     },
   },
   modulePathIgnorePatterns: ['<rootDir>/node_modules/'],

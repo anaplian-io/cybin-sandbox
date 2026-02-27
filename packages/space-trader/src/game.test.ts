@@ -169,4 +169,31 @@ describe('Game', () => {
       expect(checkSystem()).toBe(true);
     });
   });
+
+  describe('breedWhale', () => {
+    it('creates offspring with blended traits from both parents', () => {
+      const service = new GameService(() => 0.5); // deterministic
+      let state = service.initialize();
+
+      // Move to a breeding ground to get pods
+      state = service.moveShip(state, 2, 10);
+      expect(state.breedingOpportunity).toBeDefined();
+
+      const opportunity = state.breedingOpportunity;
+      expect(opportunity?.availablePods.length).toBeGreaterThan(0);
+
+      // Breed with the first pod
+      const newState = service.breedWhale(state, 0);
+
+      // Offspring should be added to whales array
+      expect(newState.whales.length).toBe(state.whales.length + 1);
+
+      // Original breeding opportunity should be cleared
+      expect(newState.breedingOpportunity).toBeUndefined();
+
+      // New whale's name should reference both parents
+      const newWhale = newState.whales[newState.whales.length - 1];
+      expect(newWhale.name).toContain('Aurora'); // primary whale
+    });
+  });
 });

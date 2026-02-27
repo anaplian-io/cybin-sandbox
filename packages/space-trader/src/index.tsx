@@ -1,6 +1,11 @@
 import React from 'react';
 import { render, useInput } from 'ink';
-import { MapDisplay, StatusDisplay, ControlsDisplay } from './map';
+import {
+  MapDisplay,
+  StatusDisplay,
+  ControlsDisplay,
+  BreedingMenu,
+} from './map';
 import { GameService, GameState } from './game';
 
 const service = new GameService();
@@ -12,6 +17,32 @@ function GameApp() {
     // Handle Ctrl+C
     if (key.ctrl && input === 'c') {
       process.exit(0);
+    }
+
+    // Handle Escape to close breeding menu
+    if (key.escape && state.breedingOpportunity) {
+      setState({ ...state, breedingMenuOpen: false });
+      return;
+    }
+
+    // Handle number keys in breeding menu
+    if (state.breedingOpportunity && state.breedingMenuOpen) {
+      const num = parseInt(input, 10);
+      if (
+        !isNaN(num) &&
+        num >= 1 &&
+        num <= state.breedingOpportunity.availablePods.length
+      ) {
+        const newState = service.breedWhale(state, num - 1);
+        setState(newState);
+        return;
+      }
+    }
+
+    // Handle Enter to open breeding menu
+    if (key.return && state.breedingOpportunity && !state.breedingMenuOpen) {
+      setState({ ...state, breedingMenuOpen: true });
+      return;
     }
 
     // Handle arrow keys using Ink's key object
@@ -28,11 +59,6 @@ function GameApp() {
       const newX = Math.max(0, state.shipPosition.x - 1);
       setState(service.moveShip(state, newX, state.shipPosition.y));
     }
-
-    // Handle Enter key for breeding
-    if (key.return && state.breedingOpportunity) {
-      console.log('Breeding menu not yet implemented');
-    }
   });
 
   return (
@@ -40,6 +66,7 @@ function GameApp() {
       <MapDisplay gameState={state} />
       <StatusDisplay gameState={state} />
       <ControlsDisplay hasBreedingOpportunity={!!state.breedingOpportunity} />
+      {state.breedingMenuOpen && <BreedingMenu gameState={state} />}
     </>
   );
 }
