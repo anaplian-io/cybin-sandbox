@@ -99,8 +99,83 @@ A terminal-based game about riding a domesticated sky-whale through floating arc
 - **Whale Evolution Stages** — Juvenile, Adult, Elder (different capabilities)
 - **Minigames** — Simple tasks at waystations (fishing, scanning, navigation puzzles)
 
+## MVP Task Breakdown
+
+### ✅ Completed Tasks
+
+| Component                                 | Status  | Notes                                                           |
+| ----------------------------------------- | ------- | --------------------------------------------------------------- |
+| Core Model Layer (`whale.ts`, `world.ts`) | ✅ Done | Whale, World types; tile generation                             |
+| Breeding Service (`breeding.ts`)          | ✅ Done | SOLID dependency injection, tests included                      |
+| Game Service (`game.ts`)                  | ✅ Done | State management, turn progression, wild pod generation         |
+| Ink Terminal UI (`map.tsx`)               | ✅ Done | Map display, status panel, controls                             |
+| Player Movement                           | ✅ Done | Arrow keys navigate the grid                                    |
+| Breeding Ground Detection                 | ✅ Done | Triggers breeding opportunity when stepping on breeding grounds |
+
+### 📋 Remaining MVP Tasks (Priority Order)
+
+#### Phase 1: Core Gameplay Loop (Blocking Playability)
+
+| Task                        | Priority | Est. | Details                                                                         |
+| --------------------------- | -------- | ---- | ------------------------------------------------------------------------------- |
+| Breeding Menu UI            | **High** | 2–3h | Interactive menu to select wild pod, display predicted traits, confirm breeding |
+| Whale Status Enhancement    | **High** | 1h   | Add health, aether mist production rate to status screen                        |
+| Aether Mist Resource System | **High** | 2h   | Harvest aether mist from whales, sell at waystations                            |
+
+#### Phase 2: Waystation Interaction (Essential for Loop)
+
+| Task                    | Priority   | Est. | Details                                        |
+| ----------------------- | ---------- | ---- | ---------------------------------------------- |
+| Trade Interface (Basic) | **Medium** | 2–3h | Buy/sell aether mist, display prices           |
+| Gossip Log (Text-only)  | **Medium** | 1–2h | Display faction updates, rumors at waystations |
+| Waystation Menu System  | **Medium** | 1h   | Context-aware menu (Trade / Gossip / Rest)     |
+
+#### Phase 3: World State & Progression
+
+| Task                     | Priority   | Est. | Details                                                |
+| ------------------------ | ---------- | ---- | ------------------------------------------------------ |
+| Evolution Logs           | **Medium** | 1–2h | Text logs of wild pod trait changes per season         |
+| Season/Day Progression   | **Medium** | 1–2h | Track turn-based seasons affecting environment         |
+| Wild Pod Evolution Logic | **Medium** | 2h   | Apply environmental pressures to wild pods each season |
+
+#### Phase 4: Polish & Playability
+
+| Task                               | Priority | Est. | Details                                             |
+| ---------------------------------- | -------- | ---- | --------------------------------------------------- |
+| Turn Cost for Movement             | **Low**  | 0.5h | Consumes aether mist or time per move               |
+| Breeding Cooldown System           | **Low**  | 1h   | Prevent immediate re-breeding after offspring       |
+| Visual Feedback (Color, Animation) | **Low**  | 1h   | Ink color hints for traits, brief status animations |
+
+#### Phase 5: Testing & Documentation
+
+| Task                          | Priority   | Est. | Details                                 |
+| ----------------------------- | ---------- | ---- | --------------------------------------- |
+| Integration Tests (Full Loop) | **High**   | 2h   | End-to-end: move → breed → trade        |
+| Gameplay Balance Adjustments  | **Medium** | 2h   | Tweak trait weights, resource costs     |
+| User Guide (README)           | **Medium** | 1h   | How to play, controls, basic strategies |
+
+### 📌 Blocked / Post-MVP (Deferred)
+
+| Feature                                       | Reason                                        |
+| --------------------------------------------- | --------------------------------------------- |
+| Multiplayer Aspects                           | Requires networking layer, backend state sync |
+| Seasonal Weather Effects                      | Needs world-state evolution system first      |
+| Whale Evolution Stages (Juvenile/Adult/Elder) | Requires lifecycle state tracking             |
+| Minigames at Waystations                      | Adds complexity beyond MVP                    |
+
+---
+
 ## Next Steps
 
-- [ ] Define initial project structure (Lerna workspace layout)
-- [ ] Implement core model layer (Whale, Position, Trait system)
-- [ ] Build first playable loop (move whale on grid, visit waystation, breed)
+- [ ] **Implement Breeding Menu UI** (Phase 1, High Priority) — Enables the core "modding" loop
+- [ ] **Add Whale Status Enhancements** (Phase 1) — Shows health, aether mist production
+- [ ] **Build Aether Mist Resource System** (Phase 1) — Gives player a resource to trade
+- [ ] **Create Waystation Menu System** (Phase 2) — Context-aware interface at key locations
+- [ ] **Write Integration Tests** (Phase 4) — Verify end-to-end gameplay loop
+
+## Future Scope
+
+- **Multiplayer Aspects** — Async interaction with other nomads (message boards, trade posts)
+- **Seasonal Cycles** — Weather patterns change breeding成功率
+- **Whale Evolution Stages** — Juvenile, Adult, Elder (different capabilities)
+- **Minigames** — Simple tasks at waystations (fishing, scanning, navigation puzzles)
