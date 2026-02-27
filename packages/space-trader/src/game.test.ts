@@ -1,4 +1,4 @@
-import { GameService, checkSystem } from './game';
+import { GameService, checkSystem, AetherMistConfig } from './game';
 import { Whale, createWhale } from './whale';
 
 describe('Game', () => {
@@ -261,6 +261,56 @@ describe('Game', () => {
       // Toggle off
       state = service.toggleWhaleStatus(state);
       expect(state.whaleStatusOpen).toBe(false);
+    });
+  });
+
+  describe('calculateAetherMistChange', () => {
+    it('returns positive change for whales with efficiency trait', () => {
+      const config: AetherMistConfig = {
+        baseProduction: 1,
+        generationMultiplier: 0.5,
+        efficiencyBonus: 0.5,
+        consumptionPenalty: 0.3,
+      };
+      const service = new GameService(undefined, config);
+      const whales: Whale[] = [
+        { ...createWhale('Efficient', ['efficiency']), generation: 2 },
+      ];
+      const change = service.calculateAetherMistChange(whales);
+      expect(change).toBeGreaterThan(2); // 1 + 1 (gen) = 2, * 1.5 efficiency = 3
+    });
+
+    it('returns lower change for whales with consumption trait', () => {
+      const config: AetherMistConfig = {
+        baseProduction: 1,
+        generationMultiplier: 0.5,
+        efficiencyBonus: 0.5,
+        consumptionPenalty: 0.3,
+      };
+      const service = new GameService(undefined, config);
+      const whales: Whale[] = [
+        { ...createWhale('Consumer Whale', ['consumption']), generation: 1 },
+      ];
+      const change = service.calculateAetherMistChange(whales);
+      expect(change).toBeLessThan(1); // 1 + 0 (gen) = 1, * 0.7 consumption = 0
+    });
+
+    it('returns higher change for whales with efficiency trait', () => {
+      const config: AetherMistConfig = {
+        baseProduction: 1,
+        generationMultiplier: 0.5,
+        efficiencyBonus: 0.5,
+        consumptionPenalty: 0.3,
+      };
+      const service = new GameService(undefined, config);
+      // High generation produces, consumption reduces
+      const whales: Whale[] = [
+        { ...createWhale('High Gen', ['speed']), generation: 10 }, // High gen produces
+        { ...createWhale('Consumer', ['consumption']), generation: 1 }, // Consumes
+      ];
+      const change = service.calculateAetherMistChange(whales);
+      // Should be positive since high gen produces more than consumption reduces
+      expect(change).toBeGreaterThan(0);
     });
   });
 });

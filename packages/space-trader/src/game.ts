@@ -7,11 +7,27 @@ export interface Position {
   y: number;
 }
 
+// Aether mist production configuration
+export interface AetherMistConfig {
+  baseProduction: number;
+  generationMultiplier: number;
+  efficiencyBonus: number;
+  consumptionPenalty: number;
+}
+
+export const defaultAetherMistConfig: AetherMistConfig = {
+  baseProduction: 1,
+  generationMultiplier: 0.5, // +1 per 2 generations
+  efficiencyBonus: 0.5, // +50% for efficiency trait
+  consumptionPenalty: 0.3, // -30% for consumption trait
+};
+
 export interface GameState {
   world: World;
   shipPosition: Position;
   whales: Whale[];
   turn: number;
+  aetherMist: number;
   breedingOpportunity?: {
     locationName: string;
     availablePods: Whale[];
@@ -22,9 +38,14 @@ export interface GameState {
 
 export class GameService {
   private breedingService: BreedingService;
+  private aetherMistConfig: AetherMistConfig;
 
-  constructor(private readonly random?: RandomGenerator) {
+  constructor(
+    random?: RandomGenerator,
+    aetherMistConfig: AetherMistConfig = defaultAetherMistConfig,
+  ) {
     this.breedingService = new BreedingService(random ?? Math.random);
+    this.aetherMistConfig = aetherMistConfig;
   }
 
   initialize(): GameState {
@@ -34,18 +55,43 @@ export class GameService {
       shipPosition: { x: 0, y: 0 },
       whales: [createWhale('Aurora', ['speed', 'capacity'])],
       turn: 0,
+      aetherMist: 50, // Starting amount
       whaleStatusOpen: false,
     };
   }
 
   nextTurn(state: GameState): GameState {
     const newWhales = this.updateWhalePopulation(state.whales);
+    const aetherMistChange = this.calculateAetherMistChange(state.whales);
 
     return {
       ...state,
       whales: newWhales,
+      aetherMist: state.aetherMist + aetherMistChange,
       turn: state.turn + 1,
     };
+  }
+
+  calculateAetherMistChange(whales: Whale[]): number {
+    let change = 0;
+    for (const whale of whales) {
+      const baseProduction =
+        this.aetherMistConfig.baseProduction +
+        Math.floor(
+          whale.generation * this.aetherMistConfig.generationMultiplier,
+        );
+      let multiplier = 1;
+
+      if (whale.traits.includes('efficiency')) {
+        multiplier += this.aetherMistConfig.efficiencyBonus;
+      }
+      if (whale.traits.includes('consumption')) {
+        multiplier -= this.aetherMistConfig.consumptionPenalty;
+      }
+
+      change += Math.floor(baseProduction * multiplier);
+    }
+    return change;
   }
 
   moveShip(state: GameState, targetX: number, targetY: number): GameState {
