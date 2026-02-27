@@ -1,4 +1,4 @@
-import { World, createWorld } from './world';
+import { World, createWorld, getKey } from './world';
 import { Whale, createWhale, Trait } from './whale';
 import { BreedingService, RandomGenerator } from './breeding';
 
@@ -34,6 +34,7 @@ export interface GameState {
   };
   breedingMenuOpen?: boolean;
   whaleStatusOpen?: boolean;
+  waystationMenuOpen?: boolean;
 }
 
 export class GameService {
@@ -57,6 +58,7 @@ export class GameService {
       turn: 0,
       aetherMist: 50, // Starting amount
       whaleStatusOpen: false,
+      waystationMenuOpen: false,
     };
   }
 
@@ -177,8 +179,14 @@ export class GameService {
   toggleWhaleStatus(state: GameState): GameState {
     return { ...state, whaleStatusOpen: !state.whaleStatusOpen };
   }
+
+  toggleWaystationMenu(state: GameState): GameState {
+    return { ...state, waystationMenuOpen: !state.waystationMenuOpen };
+  }
 }
 
-export function checkSystem(): boolean {
-  return true;
+export function checkSystem(state: GameState): boolean {
+  const key = getKey(state.shipPosition.x, state.shipPosition.y);
+  const tile = state.world.tiles.get(key);
+  return tile?.type === 'waystation';
 }
