@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, Newline } from 'ink';
 import { GameState } from './game';
+import { Whale } from './whale';
 
 interface MapProps {
   gameState: GameState;
@@ -81,15 +82,45 @@ export function StatusDisplay({ gameState }: { gameState: GameState }) {
   );
 }
 
+export function WhaleStatusDisplay({ whales }: { whales: Whale[] }) {
+  return (
+    <Text>
+      <Newline />
+      <Text color="cyan" bold>
+        Whale Status
+      </Text>
+      <Newline />
+      {whales.map((whale, index) => (
+        <Text key={index}>
+          <Text color="yellow">[{index + 1}]</Text> {whale.name}
+          <Text color="white"> (Gen {whale.generation})</Text>
+          <Newline />
+          <Text color="green">
+            {' '}
+            Health: {whale.stats.health}/{whale.stats.maxHealth}
+          </Text>
+          <Newline />
+          <Text color="blue"> Traits: {whale.traits.join(', ')}</Text>
+          <Newline />
+        </Text>
+      ))}
+      <Text color="yellow">Press 'W' to close</Text>
+    </Text>
+  );
+}
+
 export function ControlsDisplay({
   hasBreedingOpportunity,
+  whaleStatusOpen,
 }: {
   hasBreedingOpportunity: boolean;
+  whaleStatusOpen?: boolean;
 }) {
   return (
     <Text>
       <Text>&larr; &uarr; &rarr; &darr;: Move </Text>
       {hasBreedingOpportunity && <Text>| Enter: Breed </Text>}
+      {!whaleStatusOpen && <Text>| W: Whale Status </Text>}
       <Text>| Ctrl+C: Quit</Text>
     </Text>
   );

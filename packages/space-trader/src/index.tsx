@@ -5,6 +5,7 @@ import {
   StatusDisplay,
   ControlsDisplay,
   BreedingMenu,
+  WhaleStatusDisplay,
 } from './map';
 import { GameService, GameState } from './game';
 
@@ -45,6 +46,12 @@ function GameApp() {
       return;
     }
 
+    // Handle 'W' key to toggle whale status
+    if (input.toLowerCase() === 'w') {
+      setState(service.toggleWhaleStatus(state));
+      return;
+    }
+
     // Handle arrow keys using Ink's key object
     if (key.upArrow) {
       const newY = Math.max(0, state.shipPosition.y - 1);
@@ -65,8 +72,12 @@ function GameApp() {
     <>
       <MapDisplay gameState={state} />
       <StatusDisplay gameState={state} />
-      <ControlsDisplay hasBreedingOpportunity={!!state.breedingOpportunity} />
+      <ControlsDisplay
+        hasBreedingOpportunity={!!state.breedingOpportunity}
+        whaleStatusOpen={state.whaleStatusOpen}
+      />
       {state.breedingMenuOpen && <BreedingMenu gameState={state} />}
+      {state.whaleStatusOpen && <WhaleStatusDisplay whales={state.whales} />}
     </>
   );
 }
