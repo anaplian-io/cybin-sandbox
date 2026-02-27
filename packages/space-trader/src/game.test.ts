@@ -310,6 +310,57 @@ describe('Game', () => {
     });
   });
 
+  describe('tradeAetherMist', () => {
+    it('buys aether mist when player has enough inventory', () => {
+      const service = new GameService();
+      let state = service.initialize();
+
+      // Initial state: player has some inventory
+      expect(state.tradeInventory.aetherMist).toBe(100);
+      const initialAetherMist = state.aetherMist;
+
+      // Buy 10 units at 2 inventory each = 20 cost
+      state = service.buyAetherMist(state, 10);
+
+      expect(state.aetherMist).toBe(initialAetherMist + 10);
+      expect(state.tradeInventory.aetherMist).toBe(80); // 100 - 20
+    });
+
+    it('does not buy when player lacks inventory', () => {
+      const service = new GameService();
+      const state = service.initialize();
+
+      // Player has 100 inventory, buying 600 units at 2 each = 1200 cost
+      const newState = service.buyAetherMist(state, 600);
+
+      expect(newState).toBe(state); // No change
+    });
+
+    it('sells aether mist when player has enough', () => {
+      const service = new GameService();
+      let state = service.initialize();
+
+      // Initial aether mist: 50
+      const initialInventory = state.tradeInventory.aetherMist;
+
+      // Sell 10 units at 1 inventory each = +10
+      state = service.sellAetherMist(state, 10);
+
+      expect(state.aetherMist).toBe(40);
+      expect(state.tradeInventory.aetherMist).toBe(initialInventory + 10);
+    });
+
+    it('does not sell when player lacks aether mist', () => {
+      const service = new GameService();
+      const state = service.initialize();
+
+      // Player has 50 aether mist, selling 60 should fail
+      const newState = service.sellAetherMist(state, 60);
+
+      expect(newState).toBe(state); // No change
+    });
+  });
+
   describe('calculateAetherMistChange', () => {
     it('returns positive change for whales with efficiency trait', () => {
       const config: AetherMistConfig = {

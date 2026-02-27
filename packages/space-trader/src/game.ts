@@ -22,6 +22,17 @@ export const defaultAetherMistConfig: AetherMistConfig = {
   consumptionPenalty: 0.3, // -30% for consumption trait
 };
 
+// Trade price configuration
+export interface TradeConfig {
+  buyPricePerUnit: number;
+  sellPricePerUnit: number;
+}
+
+export const defaultTradeConfig: TradeConfig = {
+  buyPricePerUnit: 2,
+  sellPricePerUnit: 1,
+};
+
 export interface GameState {
   world: World;
   shipPosition: Position;
@@ -35,18 +46,24 @@ export interface GameState {
   breedingMenuOpen?: boolean;
   whaleStatusOpen?: boolean;
   waystationMenuOpen?: boolean;
+  tradeInventory: {
+    aetherMist: number; // Player's aether mist inventory
+  };
 }
 
 export class GameService {
   private breedingService: BreedingService;
   private aetherMistConfig: AetherMistConfig;
+  private tradeConfig: TradeConfig;
 
   constructor(
     random?: RandomGenerator,
     aetherMistConfig: AetherMistConfig = defaultAetherMistConfig,
+    tradeConfig: TradeConfig = defaultTradeConfig,
   ) {
     this.breedingService = new BreedingService(random ?? Math.random);
     this.aetherMistConfig = aetherMistConfig;
+    this.tradeConfig = tradeConfig;
   }
 
   initialize(): GameState {
@@ -59,6 +76,9 @@ export class GameService {
       aetherMist: 50, // Starting amount
       whaleStatusOpen: false,
       waystationMenuOpen: false,
+      tradeInventory: {
+        aetherMist: 100, // Player starts with some aether mist to trade
+      },
     };
   }
 
@@ -182,6 +202,37 @@ export class GameService {
 
   toggleWaystationMenu(state: GameState): GameState {
     return { ...state, waystationMenuOpen: !state.waystationMenuOpen };
+  }
+
+  buyAetherMist(state: GameState, amount: number): GameState {
+    const cost = amount * this.tradeConfig.buyPricePerUnit;
+    if (state.tradeInventory.aetherMist >= cost) {
+      return {
+        ...state,
+        aetherMist: state.aetherMist + amount,
+        tradeInventory: {
+          ...state.tradeInventory,
+          aetherMist: state.tradeInventory.aetherMist - cost,
+        },
+      };
+    }
+    return state; // Not enough inventory
+  }
+
+  sellAetherMist(state: GameState, amount: number): GameState {
+    if (state.aetherMist >= amount) {
+      return {
+        ...state,
+        aetherMist: state.aetherMist - amount,
+        tradeInventory: {
+          ...state.tradeInventory,
+          aetherMist:
+            state.tradeInventory.aetherMist +
+            amount * this.tradeConfig.sellPricePerUnit,
+        },
+      };
+    }
+    return state; // Not enough aether mist
   }
 }
 

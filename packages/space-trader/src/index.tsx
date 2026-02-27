@@ -68,6 +68,30 @@ function GameApp() {
       return;
     }
 
+    // Handle number keys in waystation menu for trading
+    if (state.waystationMenuOpen) {
+      const num = parseInt(input, 10);
+      if (!isNaN(num)) {
+        // Trade 10 units by default
+        const tradeAmount = 10;
+        if (num === 1) {
+          // Buy aether mist
+          const newState = service.buyAetherMist(state, tradeAmount);
+          if (newState !== state) {
+            setState(newState);
+          }
+          return;
+        } else if (num === 2) {
+          // Sell aether mist
+          const newState = service.sellAetherMist(state, tradeAmount);
+          if (newState !== state) {
+            setState(newState);
+          }
+          return;
+        }
+      }
+    }
+
     // Handle 'W' key to toggle whale status
     if (input.toLowerCase() === 'w') {
       setState(service.toggleWhaleStatus(state));
