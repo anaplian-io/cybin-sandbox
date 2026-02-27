@@ -1,5 +1,5 @@
 import { GameService, checkSystem } from './game';
-import { Whale } from './whale';
+import { Whale, createWhale } from './whale';
 
 describe('Game', () => {
   describe('initialize', () => {
@@ -109,7 +109,11 @@ describe('Game', () => {
       const state = service.initialize();
 
       // Create a tile manually without a name
-      const unnamedBreedingGround = { x: 7, y: 7, type: 'breedingGround' };
+      const unnamedBreedingGround = {
+        x: 7,
+        y: 7,
+        type: 'breedingGround' as const,
+      };
       state.world.tiles.set('7,7', unnamedBreedingGround);
 
       const newState = service.moveShip(state, 7, 7);
@@ -236,15 +240,7 @@ describe('Game', () => {
         whales: [],
         breedingOpportunity: {
           locationName: 'Test',
-          availablePods: [
-            {
-              id: 'p1',
-              name: 'Pod 1',
-              traits: ['speed'],
-              stats: { health: 100, maxHealth: 100, aetherMistProduction: 1 },
-              generation: 1,
-            },
-          ],
+          availablePods: [createWhale('Pod 1', ['speed'])],
         },
       };
       const newState = service.breedWhale(state, 0);
