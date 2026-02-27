@@ -17,6 +17,7 @@ export interface GameState {
     availablePods: Whale[];
   };
   breedingMenuOpen?: boolean;
+  whaleStatusOpen?: boolean;
 }
 
 export class GameService {
@@ -33,6 +34,7 @@ export class GameService {
       shipPosition: { x: 0, y: 0 },
       whales: [createWhale('Aurora', ['speed', 'capacity'])],
       turn: 0,
+      whaleStatusOpen: false,
     };
   }
 
@@ -124,6 +126,10 @@ export class GameService {
       whales: [...state.whales, offspring],
       breedingOpportunity: undefined,
     };
+  }
+
+  toggleWhaleStatus(state: GameState): GameState {
+    return { ...state, whaleStatusOpen: !state.whaleStatusOpen };
   }
 }
 

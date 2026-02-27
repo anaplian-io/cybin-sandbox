@@ -247,4 +247,20 @@ describe('Game', () => {
       expect(newState).toBe(state);
     });
   });
+
+  describe('toggleWhaleStatus', () => {
+    it('toggles whale status menu state', () => {
+      const service = new GameService();
+      let state = service.initialize();
+      expect(state.whaleStatusOpen).toBe(false);
+
+      // Toggle on
+      state = service.toggleWhaleStatus(state);
+      expect(state.whaleStatusOpen).toBe(true);
+
+      // Toggle off
+      state = service.toggleWhaleStatus(state);
+      expect(state.whaleStatusOpen).toBe(false);
+    });
+  });
 });
