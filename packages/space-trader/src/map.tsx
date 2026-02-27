@@ -55,8 +55,14 @@ export function MapDisplay({ gameState }: MapProps) {
 }
 
 export function StatusDisplay({ gameState }: { gameState: GameState }) {
-  const { shipPosition, whales, turn, aetherMist, breedingOpportunity } =
-    gameState;
+  const {
+    shipPosition,
+    whales,
+    turn,
+    aetherMist,
+    breedingOpportunity,
+    tradeInventory,
+  } = gameState;
   const primaryWhale = whales[0];
 
   return (
@@ -81,6 +87,13 @@ export function StatusDisplay({ gameState }: { gameState: GameState }) {
           <Text> (Enter to breed)</Text>
         </Text>
       )}
+
+      {/* Aether mist inventory (for trading) */}
+      <Text>
+        {'\n'}
+        <Text color="yellow">Trade Inventory: </Text>
+        <Text>{tradeInventory.aetherMist} aether mist</Text>
+      </Text>
     </Text>
   );
 }
@@ -170,6 +183,9 @@ export function WaystationMenu({ gameState }: { gameState: GameState }) {
     return null;
   }
 
+  const buyPrice = 2; // Default price per unit
+  const sellPrice = 1; // Default price per unit
+
   return (
     <Text>
       <Newline />
@@ -182,6 +198,10 @@ export function WaystationMenu({ gameState }: { gameState: GameState }) {
       <Text color="cyan">What would you like to do?</Text>
       <Newline />
       <Text color="green">[1] Trade Goods</Text>
+      <Newline />
+      <Text> • Buy Aether Mist: {buyPrice} inventory/unit</Text>
+      <Newline />
+      <Text> • Sell Aether Mist: {sellPrice} inventory/unit</Text>
       <Newline />
       <Text color="yellow">[2] Gossip Log</Text>
       <Newline />
