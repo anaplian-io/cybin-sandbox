@@ -7,6 +7,21 @@ export interface Position {
   y: number;
 }
 
+// Aether mist production configuration
+export interface AetherMistConfig {
+  baseProduction: number;
+  generationMultiplier: number;
+  efficiencyBonus: number;
+  consumptionPenalty: number;
+}
+
+export const defaultAetherMistConfig: AetherMistConfig = {
+  baseProduction: 1,
+  generationMultiplier: 0.5, // +1 per 2 generations
+  efficiencyBonus: 0.5, // +50% for efficiency trait
+  consumptionPenalty: 0.3, // -30% for consumption trait
+};
+
 export interface GameState {
   world: World;
   shipPosition: Position;
@@ -23,9 +38,14 @@ export interface GameState {
 
 export class GameService {
   private breedingService: BreedingService;
+  private aetherMistConfig: AetherMistConfig;
 
-  constructor(private readonly random?: RandomGenerator) {
+  constructor(
+    random?: RandomGenerator,
+    aetherMistConfig: AetherMistConfig = defaultAetherMistConfig,
+  ) {
     this.breedingService = new BreedingService(random ?? Math.random);
+    this.aetherMistConfig = aetherMistConfig;
   }
 
   initialize(): GameState {
@@ -53,19 +73,20 @@ export class GameService {
   }
 
   calculateAetherMistChange(whales: Whale[]): number {
-    // Each whale produces aether mist based on traits and generation
-    // Higher generation = more production
-    // 'efficiency' trait increases production, 'consumption' trait decreases it
     let change = 0;
     for (const whale of whales) {
-      const baseProduction = 1 + Math.floor(whale.generation / 2);
+      const baseProduction =
+        this.aetherMistConfig.baseProduction +
+        Math.floor(
+          whale.generation * this.aetherMistConfig.generationMultiplier,
+        );
       let multiplier = 1;
 
       if (whale.traits.includes('efficiency')) {
-        multiplier += 0.5;
+        multiplier += this.aetherMistConfig.efficiencyBonus;
       }
       if (whale.traits.includes('consumption')) {
-        multiplier -= 0.3;
+        multiplier -= this.aetherMistConfig.consumptionPenalty;
       }
 
       change += Math.floor(baseProduction * multiplier);
