@@ -3,7 +3,9 @@ export type Trait =
   | 'capacity'
   | 'resilience'
   | 'thermotolerance'
-  | 'predatorDeterrence';
+  | 'predatorDeterrence'
+  | 'efficiency'
+  | 'consumption';
 
 export interface WhaleStats {
   health: number;

@@ -12,6 +12,7 @@ export interface GameState {
   shipPosition: Position;
   whales: Whale[];
   turn: number;
+  aetherMist: number;
   breedingOpportunity?: {
     locationName: string;
     availablePods: Whale[];
@@ -34,18 +35,42 @@ export class GameService {
       shipPosition: { x: 0, y: 0 },
       whales: [createWhale('Aurora', ['speed', 'capacity'])],
       turn: 0,
+      aetherMist: 50, // Starting amount
       whaleStatusOpen: false,
     };
   }
 
   nextTurn(state: GameState): GameState {
     const newWhales = this.updateWhalePopulation(state.whales);
+    const aetherMistChange = this.calculateAetherMistChange(state.whales);
 
     return {
       ...state,
       whales: newWhales,
+      aetherMist: state.aetherMist + aetherMistChange,
       turn: state.turn + 1,
     };
+  }
+
+  calculateAetherMistChange(whales: Whale[]): number {
+    // Each whale produces aether mist based on traits and generation
+    // Higher generation = more production
+    // 'efficiency' trait increases production, 'consumption' trait decreases it
+    let change = 0;
+    for (const whale of whales) {
+      const baseProduction = 1 + Math.floor(whale.generation / 2);
+      let multiplier = 1;
+
+      if (whale.traits.includes('efficiency')) {
+        multiplier += 0.5;
+      }
+      if (whale.traits.includes('consumption')) {
+        multiplier -= 0.3;
+      }
+
+      change += Math.floor(baseProduction * multiplier);
+    }
+    return change;
   }
 
   moveShip(state: GameState, targetX: number, targetY: number): GameState {

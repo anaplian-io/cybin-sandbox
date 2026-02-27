@@ -55,7 +55,8 @@ export function MapDisplay({ gameState }: MapProps) {
 }
 
 export function StatusDisplay({ gameState }: { gameState: GameState }) {
-  const { shipPosition, whales, turn, breedingOpportunity } = gameState;
+  const { shipPosition, whales, turn, aetherMist, breedingOpportunity } =
+    gameState;
   const primaryWhale = whales[0];
 
   return (
@@ -68,6 +69,8 @@ export function StatusDisplay({ gameState }: { gameState: GameState }) {
       </Text>
       <Text> | Whale: </Text>
       <Text>{primaryWhale?.name || 'None'}</Text>
+      <Text> | Aether Mist: </Text>
+      <Text color="cyan">{aetherMist}</Text>
 
       {/* Breeding opportunity indicator */}
       {breedingOpportunity && (
@@ -120,7 +123,7 @@ export function ControlsDisplay({
     <Text>
       <Text>&larr; &uarr; &rarr; &darr;: Move </Text>
       {hasBreedingOpportunity && <Text>| Enter: Breed </Text>}
-      {!whaleStatusOpen && <Text>| W: Whale Status </Text>}
+      {!whaleStatusOpen && <Text>| W: Whale Status</Text>}
       <Text>| Ctrl+C: Quit</Text>
     </Text>
   );
