@@ -6,7 +6,9 @@ import {
   ControlsDisplay,
   BreedingMenu,
   WhaleStatusDisplay,
+  WaystationMenu,
 } from './map';
+import { checkSystem } from './game';
 import { GameService, GameState } from './game';
 
 const service = new GameService();
@@ -20,9 +22,13 @@ function GameApp() {
       process.exit(0);
     }
 
-    // Handle Escape to close breeding menu
-    if (key.escape && state.breedingOpportunity) {
-      setState({ ...state, breedingMenuOpen: false });
+    // Handle Escape to close menus
+    if (key.escape && (state.breedingMenuOpen || state.waystationMenuOpen)) {
+      setState({
+        ...state,
+        breedingMenuOpen: false,
+        waystationMenuOpen: false,
+      });
       return;
     }
 
@@ -40,9 +46,25 @@ function GameApp() {
       }
     }
 
-    // Handle Enter to open breeding menu
-    if (key.return && state.breedingOpportunity && !state.breedingMenuOpen) {
+    // Handle Enter to open breeding menu at breeding grounds
+    if (
+      key.return &&
+      state.breedingOpportunity &&
+      !state.breedingMenuOpen &&
+      !state.waystationMenuOpen
+    ) {
       setState({ ...state, breedingMenuOpen: true });
+      return;
+    }
+
+    // Handle Enter to open waystation menu at waystations
+    if (
+      key.return &&
+      checkSystem(state) &&
+      !state.breedingMenuOpen &&
+      !state.waystationMenuOpen
+    ) {
+      setState({ ...state, waystationMenuOpen: true });
       return;
     }
 
@@ -78,6 +100,7 @@ function GameApp() {
       />
       {state.breedingMenuOpen && <BreedingMenu gameState={state} />}
       {state.whaleStatusOpen && <WhaleStatusDisplay whales={state.whales} />}
+      {state.waystationMenuOpen && <WaystationMenu gameState={state} />}
     </>
   );
 }

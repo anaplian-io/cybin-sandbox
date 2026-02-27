@@ -184,8 +184,25 @@ describe('Game', () => {
   });
 
   describe('checkSystem', () => {
-    it('returns true', () => {
-      expect(checkSystem()).toBe(true);
+    it('returns true when player is on waystation tile', () => {
+      const service = new GameService();
+      const state = service.initialize();
+
+      // Move to waystation position
+      const waystationPos = { x: 7, y: 7 };
+      state.shipPosition = waystationPos;
+
+      expect(checkSystem(state)).toBe(true);
+    });
+
+    it('returns false when player is not on waystation tile', () => {
+      const service = new GameService();
+      const state = service.initialize();
+
+      // Move to non-waystation position
+      state.shipPosition = { x: 0, y: 0 };
+
+      expect(checkSystem(state)).toBe(false);
     });
   });
 
@@ -261,6 +278,45 @@ describe('Game', () => {
       // Toggle off
       state = service.toggleWhaleStatus(state);
       expect(state.whaleStatusOpen).toBe(false);
+    });
+  });
+
+  describe('toggleWaystationMenu', () => {
+    it('toggles waystation menu state', () => {
+      const service = new GameService();
+      let state = service.initialize();
+      expect(state.waystationMenuOpen).toBe(false);
+
+      // Toggle on
+      state = service.toggleWaystationMenu(state);
+      expect(state.waystationMenuOpen).toBe(true);
+
+      // Toggle off
+      state = service.toggleWaystationMenu(state);
+      expect(state.waystationMenuOpen).toBe(false);
+    });
+  });
+
+  describe('checkSystem', () => {
+    it('returns true when player is on waystation tile', () => {
+      const service = new GameService();
+      const state = service.initialize();
+
+      // Move to waystation position
+      const waystationPos = { x: 7, y: 7 };
+      state.shipPosition = waystationPos;
+
+      expect(checkSystem(state)).toBe(true);
+    });
+
+    it('returns false when player is not on waystation tile', () => {
+      const service = new GameService();
+      const state = service.initialize();
+
+      // Move to non-waystation position
+      state.shipPosition = { x: 0, y: 0 };
+
+      expect(checkSystem(state)).toBe(false);
     });
   });
 

@@ -115,15 +115,19 @@ export function WhaleStatusDisplay({ whales }: { whales: Whale[] }) {
 export function ControlsDisplay({
   hasBreedingOpportunity,
   whaleStatusOpen,
+  waystationMenuOpen,
 }: {
   hasBreedingOpportunity: boolean;
   whaleStatusOpen?: boolean;
+  waystationMenuOpen?: boolean;
 }) {
   return (
     <Text>
       <Text>&larr; &uarr; &rarr; &darr;: Move </Text>
       {hasBreedingOpportunity && <Text>| Enter: Breed </Text>}
-      {!whaleStatusOpen && <Text>| W: Whale Status</Text>}
+      {!whaleStatusOpen && !waystationMenuOpen && (
+        <Text>| W: Whale Status</Text>
+      )}
       <Text>| Ctrl+C: Quit</Text>
     </Text>
   );
@@ -157,6 +161,33 @@ export function BreedingMenu({ gameState }: { gameState: GameState }) {
       })}
       <Newline />
       <Text color="yellow">Press number key to select, Escape to close</Text>
+    </Text>
+  );
+}
+
+export function WaystationMenu({ gameState }: { gameState: GameState }) {
+  if (!gameState.waystationMenuOpen) {
+    return null;
+  }
+
+  return (
+    <Text>
+      <Newline />
+      <Text color="cyan" bold>
+        WAYSTATION MENU
+      </Text>
+      <Newline />
+      <Text color="white">Welcome to this waystation</Text>
+      <Newline />
+      <Text color="cyan">What would you like to do?</Text>
+      <Newline />
+      <Text color="green">[1] Trade Goods</Text>
+      <Newline />
+      <Text color="yellow">[2] Gossip Log</Text>
+      <Newline />
+      <Text color="blue">[3] Rest & Recover</Text>
+      <Newline />
+      <Text color="white">[Esc] Close</Text>
     </Text>
   );
 }
