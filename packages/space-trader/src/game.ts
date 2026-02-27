@@ -16,6 +16,7 @@ export interface GameState {
     locationName: string;
     availablePods: Whale[];
   };
+  breedingMenuOpen?: boolean;
 }
 
 export class GameService {
@@ -88,6 +89,41 @@ export class GameService {
     }
 
     return pods;
+  }
+
+  breedWhale(state: GameState, selectedPodIndex: number): GameState {
+    if (!state.breedingOpportunity) {
+      return state;
+    }
+
+    const selectedPod =
+      state.breedingOpportunity.availablePods[selectedPodIndex];
+    if (!selectedPod) {
+      return state;
+    }
+
+    const primaryWhale = state.whales[0];
+    if (!primaryWhale) {
+      return state;
+    }
+
+    // Create offspring using BreedingService
+    const newTraits = this.breedingService.breedTraits(
+      primaryWhale.traits,
+      selectedPod.traits,
+    );
+
+    const offspring = createWhale(
+      `${primaryWhale.name} x ${selectedPod.name}`,
+      newTraits,
+    );
+
+    // Close breeding menu and add offspring to fleet
+    return {
+      ...state,
+      whales: [...state.whales, offspring],
+      breedingOpportunity: undefined,
+    };
   }
 }
 
