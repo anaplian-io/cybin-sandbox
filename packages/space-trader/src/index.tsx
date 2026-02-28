@@ -8,8 +8,8 @@ import {
   WhaleStatusDisplay,
   WaystationMenu,
 } from './map';
-import { checkSystem } from './game';
-import { GameService, GameState } from './game';
+import { checkSystem, GameService } from './game.service';
+import type { GameState } from './game';
 
 const service = new GameService();
 
