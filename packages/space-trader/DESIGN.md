@@ -66,29 +66,29 @@ A terminal-based game about riding a domesticated sky-whale through floating arc
 - **Gossip Hubs** — Learn about faction standings, hidden islands
 - **Breeding Sanctuaries** — Specialized facilities for advanced trait selection
 
-## Initial Scope (MVP)
+## Initial Scope (MVP) — ** COMPLETE**
 
-1. **Sky Map View**
+1. ✅ **Sky Map View**
    - Grid-based map with your whale (`🐳`) and landmarks
    - Arrow key movement (one tile = one "step" through the sky)
    - Waystations shown as `⚓`, islands as `☁️`
 
-2. **Whale Status Screen**
+2. ✅ **Whale Status Screen**
    - Health, current traits (inherited from parents)
    - Aether mist production rate
    - Available breeding pairings
 
-3. **Breeding Menu**
+3. ✅ **Breeding Menu**
    - Select from available wild pods at waystations
    - Trait selection interface (dominant/recessive markers)
    - Display potential offspring traits
 
-4. **Waystation Interaction**
+4. ✅ **Waystation Interaction**
    - Trade interface (goods ↔ aether mist)
    - Gossip log (faction updates, rumors)
    - Mission board (delivery requests, exploration targets)
 
-5. **Evolution Logs**
+5. ✅ **Evolution Logs**
    - Text logs of wild pod evolution ("Pod A developed thermal tolerance")
    - Days/seasons progression affects environmental pressures
 
@@ -111,6 +111,13 @@ A terminal-based game about riding a domesticated sky-whale through floating arc
 | Ink Terminal UI (`map.tsx`)               | ✅ Done | Map display, status panel, controls                             |
 | Player Movement                           | ✅ Done | Arrow keys navigate the grid                                    |
 | Breeding Ground Detection                 | ✅ Done | Triggers breeding opportunity when stepping on breeding grounds |
+| Whale Status Display                      | ✅ Done | PR #15 — Health, traits, generation display                     |
+| Breeding Menu UI                          | ✅ Done | PR #14 — Trait selection with wild pod pairing                  |
+| Aether Mist Resource System               | ✅ Done | PR #16 — Harvest and sell system                                |
+| Waystation Menu System                    | ✅ Done | PR #18 — Context-aware interface (Trade / Gossip / Rest)        |
+| Trade Interface                           | ✅ Done | PR #19 — Buy/sell aether mist with prices                       |
+| Gossip Log System                         | ✅ Done | PR #21 — Faction updates, rumors at waystations                 |
+| Evolution Log System                      | ✅ Done | PR #22 — Wild pod trait change tracking                         |
 
 ### 📋 Remaining MVP Tasks (Priority Order)
 
@@ -122,21 +129,21 @@ A terminal-based game about riding a domesticated sky-whale through floating arc
 | Whale Status Enhancement    | **High** | 1h   | Add health, aether mist production rate to status screen                        |
 | Aether Mist Resource System | **High** | 2h   | Harvest aether mist from whales, sell at waystations                            |
 
-#### Phase 2: Waystation Interaction (Essential for Loop)
+#### Phase 2: Waystation Interaction (Essential for Loop) — **COMPLETE**
 
-| Task                    | Priority   | Est. | Details                                        |
-| ----------------------- | ---------- | ---- | ---------------------------------------------- |
-| Trade Interface (Basic) | **Medium** | 2–3h | Buy/sell aether mist, display prices           |
-| Gossip Log (Text-only)  | **Medium** | 1–2h | Display faction updates, rumors at waystations |
-| Waystation Menu System  | **Medium** | 1h   | Context-aware menu (Trade / Gossip / Rest)     |
+| Task                    | Status  | Details                                        |
+| ----------------------- | ------- | ---------------------------------------------- |
+| Trade Interface (Basic) | ✅ Done | Buy/sell aether mist, display prices           |
+| Gossip Log (Text-only)  | ✅ Done | Display faction updates, rumors at waystations |
+| Waystation Menu System  | ✅ Done | Context-aware menu (Trade / Gossip / Rest)     |
 
-#### Phase 3: World State & Progression
+#### Phase 3: World State & Progression — **IN PROGRESS**
 
-| Task                     | Priority   | Est. | Details                                                |
-| ------------------------ | ---------- | ---- | ------------------------------------------------------ |
-| Evolution Logs           | **Medium** | 1–2h | Text logs of wild pod trait changes per season         |
-| Season/Day Progression   | **Medium** | 1–2h | Track turn-based seasons affecting environment         |
-| Wild Pod Evolution Logic | **Medium** | 2h   | Apply environmental pressures to wild pods each season |
+| Task                     | Status  | Details                                                |
+| ------------------------ | ------- | ------------------------------------------------------ |
+| Evolution Logs           | ✅ Done | Text logs of wild pod trait changes per season         |
+| Season/Day Progression   | Pending | Track turn-based seasons affecting environment         |
+| Wild Pod Evolution Logic | Pending | Apply environmental pressures to wild pods each season |
 
 #### Phase 4: Polish & Playability
 
@@ -167,11 +174,12 @@ A terminal-based game about riding a domesticated sky-whale through floating arc
 
 ## Next Steps
 
-- [ ] **Implement Breeding Menu UI** (Phase 1, High Priority) — Enables the core "modding" loop
-- [ ] **Add Whale Status Enhancements** (Phase 1) — Shows health, aether mist production
-- [ ] **Build Aether Mist Resource System** (Phase 1) — Gives player a resource to trade
-- [ ] **Create Waystation Menu System** (Phase 2) — Context-aware interface at key locations
-- [ ] **Write Integration Tests** (Phase 4) — Verify end-to-end gameplay loop
+- [ ] **Season/Day Progression** (Phase 3) — Track turn-based seasons affecting environment
+- [ ] **Wild Pod Evolution Logic** (Phase 3) — Apply environmental pressures to wild pods each season
+- [ ] **Turn Cost for Movement** (Phase 4) — Consumes aether mist or time per move
+- [ ] **Breeding Cooldown System** (Phase 4) — Prevent immediate re-breeding after offspring
+- [ ] **Visual Feedback** (Phase 4) — Ink color hints for traits, brief status animations
+- [ ] **Integration Tests (Full Loop)** (Phase 5) — End-to-end: move → breed → trade
 
 ## Future Scope
 
