@@ -10,7 +10,7 @@ import {
   defaultTradeConfig,
 } from './game.types';
 
-class GameService {
+export class GameService {
   private breedingService: BreedingService;
   private aetherMistConfig: AetherMistConfig;
   private tradeConfig: TradeConfig;
@@ -201,12 +201,3 @@ export function checkSystem(state: GameState): boolean {
   const tile = state.world.tiles.get(key);
   return tile?.type === 'waystation';
 }
-
-// Re-export types and defaults from game.types.ts for convenience
-export type {
-  GameState,
-  Position,
-  AetherMistConfig,
-  TradeConfig,
-} from './game.types';
-export { GameService, defaultAetherMistConfig, defaultTradeConfig };
