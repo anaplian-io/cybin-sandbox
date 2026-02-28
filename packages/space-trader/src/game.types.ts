@@ -1,5 +1,6 @@
 import { World } from './world';
 import { Whale } from './whale';
+import type { SeasonState } from './season.types';
 
 export interface Position {
   x: number;
@@ -161,4 +162,5 @@ export interface GameState {
   };
   gossipLog?: GossipLog;
   evolutionLog?: EvolutionLog;
+  seasonState?: SeasonState;
 }
