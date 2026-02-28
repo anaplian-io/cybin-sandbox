@@ -201,3 +201,11 @@ export function checkSystem(state: GameState): boolean {
   const tile = state.world.tiles.get(key);
   return tile?.type === 'waystation';
 }
+
+// Re-export types for convenience
+export type {
+  GameState,
+  Position,
+  AetherMistConfig,
+  TradeConfig,
+} from './game.types';
