@@ -58,7 +58,7 @@ export type Faction = 'merchant' | 'explorer' | 'scholar' | 'hermit';
 // Gossip templates for procedural generation
 export interface GossipTemplate {
   text: string;
-  factions?: Faction[];
+  factions: Faction[];
 }
 
 export const gossipTemplates: GossipTemplate[] = [

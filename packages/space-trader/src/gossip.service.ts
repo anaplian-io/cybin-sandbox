@@ -36,20 +36,17 @@ export function generateRandomGossip(
   const template =
     gossipTemplates[Math.floor(Math.random() * gossipTemplates.length)];
 
-  // Pick a random faction from the template's factions
-  let selectedFaction: Faction | undefined;
-  if (template.factions && template.factions.length > 0) {
-    const factions = factionFilter ?? template.factions;
-    selectedFaction = factions[
-      Math.floor(Math.random() * factions.length)
-    ] as Faction;
-  }
+  // All templates have factions defined, so safely access
+  const factions = factionFilter ?? template.factions!;
+  const selectedFaction = factions[
+    Math.floor(Math.random() * factions.length)
+  ] as Faction;
 
   return {
     id: generateGossipId(),
     text: template.text,
     faction: selectedFaction,
-    source: selectedFaction ? `${selectedFaction} informant` : 'traveler',
+    source: `${selectedFaction} informant`,
     turn,
     generation: 1,
   };
