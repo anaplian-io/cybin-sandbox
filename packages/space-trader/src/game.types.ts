@@ -32,11 +32,14 @@ export const defaultTradeConfig: TradeConfig = {
   sellPricePerUnit: 1,
 };
 
+// Faction types for gossip sources
+export type Faction = 'merchant' | 'explorer' | 'scholar' | 'hermit';
+
 // Gossip system types
 export interface Gossip {
   id: string;
   text: string;
-  faction?: string;
+  faction?: Faction;
   source?: string;
   turn: number;
   generation: number; // For filtering by relevance
@@ -47,13 +50,18 @@ export interface GossipLog {
   maxEntries?: number;
 }
 
-export const defaultGossipLog: GossipLog = {
-  entries: [],
-  maxEntries: 50,
-};
+// Evolution system types
+export interface EvolutionEvent {
+  id: string;
+  text: string;
+  turn: number;
+  faction?: Faction;
+}
 
-// Faction types for gossip sources
-export type Faction = 'merchant' | 'explorer' | 'scholar' | 'hermit';
+export interface EvolutionLog {
+  entries: EvolutionEvent[];
+  maxEntries?: number;
+}
 
 // Gossip templates for procedural generation
 export interface GossipTemplate {
@@ -61,6 +69,13 @@ export interface GossipTemplate {
   factions: Faction[];
 }
 
+// Evolution templates for procedural generation
+export interface EvolutionTemplate {
+  text: string;
+  factions?: Faction[];
+}
+
+// Available gossip templates
 export const gossipTemplates: GossipTemplate[] = [
   {
     text: 'Rumors say the western archipelago has rich breeding grounds.',
@@ -104,6 +119,30 @@ export const gossipTemplates: GossipTemplate[] = [
   },
 ];
 
+// Available evolution templates
+export const evolutionTemplates: EvolutionTemplate[] = [
+  {
+    text: 'Whale pod developed thermal resistance due to recent heatwaves.',
+    factions: ['explorer', 'scholar'],
+  },
+  {
+    text: 'Whale pod evolved faster swimming speed to catch prey.',
+    factions: ['explorer'],
+  },
+  {
+    text: 'Whale pod developed improved aether mist harvesting efficiency.',
+    factions: ['merchant'],
+  },
+  {
+    text: 'Whale pod became more elusive, avoiding predators.',
+    factions: ['hermit'],
+  },
+  {
+    text: 'Whale pod developed resilience to air currents.',
+    factions: ['explorer', 'scholar'],
+  },
+];
+
 export interface GameState {
   world: World;
   shipPosition: Position;
@@ -121,4 +160,5 @@ export interface GameState {
     aetherMist: number;
   };
   gossipLog?: GossipLog;
+  evolutionLog?: EvolutionLog;
 }
