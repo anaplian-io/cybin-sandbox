@@ -1,4 +1,5 @@
-import { GameService, checkSystem, AetherMistConfig } from './game';
+import { GameService, checkSystem } from './game.service';
+import type { AetherMistConfig } from './game.types';
 import { Whale, createWhale } from './whale';
 
 describe('Game', () => {

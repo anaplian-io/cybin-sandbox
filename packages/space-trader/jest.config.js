@@ -12,5 +12,8 @@ export default {
       statements: 100,
     },
   },
-  modulePathIgnorePatterns: ['<rootDir>/node_modules/'],
+  modulePathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/src/game.ts',
+  ],
 };

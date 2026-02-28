@@ -162,16 +162,18 @@ export function BreedingMenu({ gameState }: { gameState: GameState }) {
       <Newline />
       <Text color="cyan">Select a wild pod to breed with your whale:</Text>
       <Newline />
-      {breedingOpportunity.availablePods.map((pod, index) => {
-        const traitDisplay = pod.traits.join(', ');
-        return (
-          <Text key={index}>
-            <Text color="green">[{index + 1}]</Text> {pod.name}
-            <Text> — Traits: </Text>
-            <Text>{traitDisplay}</Text>
-          </Text>
-        );
-      })}
+      {breedingOpportunity.availablePods.map(
+        (pod: import('./whale').Whale, index: number) => {
+          const traitDisplay = pod.traits.join(', ');
+          return (
+            <Text key={index}>
+              <Text color="green">[{index + 1}]</Text> {pod.name}
+              <Text> — Traits: </Text>
+              <Text>{traitDisplay}</Text>
+            </Text>
+          );
+        },
+      )}
       <Newline />
       <Text color="yellow">Press number key to select, Escape to close</Text>
     </Text>
