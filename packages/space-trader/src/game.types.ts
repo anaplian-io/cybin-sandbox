@@ -1,4 +1,5 @@
 import { World } from './world';
+import { Whale } from './whale';
 
 export interface Position {
   x: number;
