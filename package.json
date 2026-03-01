@@ -12,7 +12,7 @@
     "build": "npm run lint && npm run build:ts",
     "test": "npm run test:ts",
     "release": "npm run build && npm run test",
-    "clean": "rm -rf node_modules packages/*/node_modules",
+    "clean": "lerna run clean && rm -rf node_modules",
     "prepare": "husky"
   },
   "type": "module",
