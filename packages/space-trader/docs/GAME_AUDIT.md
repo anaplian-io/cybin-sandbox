@@ -7,13 +7,13 @@
 
 ## Current State Summary
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| **Core Model** | ✅ Complete | Whale, World, GameService fully implemented |
-| **UI Layer (Ink)** | ✅ Complete | Map, Status, Menu displays working |
-| **Game Loop** | ✅ Working | Movement, breeding, trading logic in place |
-| **Testing** | ✅ 100% coverage | 222 tests across 16 suites |
-| **Playable?** | ⚠️ Partially | UI renders, but needs Node.js runner fix |
+| Component          | Status           | Notes                                       |
+| ------------------ | ---------------- | ------------------------------------------- |
+| **Core Model**     | ✅ Complete      | Whale, World, GameService fully implemented |
+| **UI Layer (Ink)** | ✅ Complete      | Map, Status, Menu displays working          |
+| **Game Loop**      | ✅ Working       | Movement, breeding, trading logic in place  |
+| **Testing**        | ✅ 100% coverage | 222 tests across 16 suites                  |
+| **Playable?**      | ⚠️ Partially     | UI renders, but needs Node.js runner fix    |
 
 ---
 
@@ -41,47 +41,51 @@ src/
 
 ### ✅ Phase 1: Core Gameplay Loop (COMPLETE)
 
-| Feature | Status | Details |
-|---------|--------|---------|
-| Whale Model | ✅ | Health, traits, generation tracking |
-| Breeding Service | ✅ | SOLID DI, trait inheritance (breeding.ts) |
-| Wild Pod Generation | ✅ | Dynamic pods based on turn/season |
+| Feature             | Status | Details                                   |
+| ------------------- | ------ | ----------------------------------------- |
+| Whale Model         | ✅     | Health, traits, generation tracking       |
+| Breeding Service    | ✅     | SOLID DI, trait inheritance (breeding.ts) |
+| Wild Pod Generation | ✅     | Dynamic pods based on turn/season         |
 
 ### ✅ Phase 2: Waystation Interaction (COMPLETE)
 
-| Feature | Status | Details |
-|---------|--------|---------|
-| Trade Interface | ✅ | Buy/sell aether mist |
-| Gossip Log System | ✅ | Faction updates, rumors (PR #21) |
-| Waystation Menu | ✅ | Context-aware UI with Trade/Gossip/Rest |
+| Feature           | Status | Details                                 |
+| ----------------- | ------ | --------------------------------------- |
+| Trade Interface   | ✅     | Buy/sell aether mist                    |
+| Gossip Log System | ✅     | Faction updates, rumors (PR #21)        |
+| Waystation Menu   | ✅     | Context-aware UI with Trade/Gossip/Rest |
 
 ### ✅ Phase 3: World State & Progression (IN PROGRESS)
 
-| Feature | Status | Details |
-|---------|--------|---------|
-| Evolution Logs | ✅ | Wild pod trait change tracking (PR #22) |
-| Season System | ✅ | 4 seasons with environmental pressures (PR #24) |
+| Feature        | Status | Details                                         |
+| -------------- | ------ | ----------------------------------------------- |
+| Evolution Logs | ✅     | Wild pod trait change tracking (PR #22)         |
+| Season System  | ✅     | 4 seasons with environmental pressures (PR #24) |
 
 ---
 
 ## Gameplay Mechanics
 
 ### Movement
+
 - Arrow keys navigate 20×15 grid
 - Tile types: normal (`·`), island (`☁️`), waystation (`⚓`), storm (`⚡`), breeding ground (`🦋`)
 - Breeding grounds trigger opportunity on Enter
 
 ### Whale Traits
+
 - Core traits: speed, capacity, resilience, efficiency, consumption, thermotolerance, predatorDeterrence
 - Dominant/recessive inheritance via BreedingService
 - Health tracking (maxHealth, current health)
 
 ### Trading
+
 - Buy/sell aether mist at waystations
 - Prices: buy=2, sell=1 (configurable via TradeConfig)
 - Inventory tracking
 
 ### Breeding
+
 - Select from wild pods at breeding grounds
 - Traits inherited via dominance rules
 - Offspring added to fleet
@@ -101,24 +105,27 @@ src/
 
 ## What's Not Working / Missing
 
-| Issue | Impact | Notes |
-|-------|--------|-------|
-| Node.js ESM runner error | Blocked | `node dist/index.js` fails with ERR_REQUIRE_ASYNC_MODULE |
-| Gossip Log UI | Partial | Service exists, no display component |
-| Evolution Log UI | Partial | Service exists, no display component |
-| Season display | Missing | Environmental pressures not shown to player |
-| Breeding cooldown | Not implemented | Can breed immediately after offspring |
+| Issue                    | Impact          | Notes                                                    |
+| ------------------------ | --------------- | -------------------------------------------------------- |
+| Node.js ESM runner error | Blocked         | `node dist/index.js` fails with ERR_REQUIRE_ASYNC_MODULE |
+| Gossip Log UI            | Partial         | Service exists, no display component                     |
+| Evolution Log UI         | Partial         | Service exists, no display component                     |
+| Season display           | Missing         | Environmental pressures not shown to player              |
+| Breeding cooldown        | Not implemented | Can breed immediately after offspring                    |
 
 ---
 
 ## Critical Path to Playable
 
 ### Blocker: Node.js ESM Module Issue
+
 The game uses Ink which exports async modules. Current workaround:
+
 - Run tests: ✅ `npm test` passes
 - Run dev: ❌ `node dist/index.js` fails
 
 **Options to fix:**
+
 1. Use `ts-node src/index.tsx` (works but slow)
 2. Configure Jest to run as integration test
 3. Switch to a different terminal UI library
@@ -126,11 +133,11 @@ The game uses Ink which exports async modules. Current workaround:
 
 ### UI Integration Needed
 
-| Component | Service | Status |
-|-----------|---------|--------|
-| Gossip Log Display | gossip.service.ts | TODO |
-| Evolution Log Display | evolution.service.ts | TODO |
-| Season Indicator | season.service.ts | TODO |
+| Component             | Service              | Status |
+| --------------------- | -------------------- | ------ |
+| Gossip Log Display    | gossip.service.ts    | TODO   |
+| Evolution Log Display | evolution.service.ts | TODO   |
+| Season Indicator      | season.service.ts    | TODO   |
 
 ---
 
@@ -156,15 +163,18 @@ ship.ts              100%
 ## Next Steps (Priority Order)
 
 ### High Priority
+
 1. **Fix Node.js ESM runner** — Get `node dist/index.js` working or create wrapper
 2. **Season Display UI** — Show current season and environmental pressure
 3. **Gossip/Evolution Log UI** — Integrate with waystation menu
 
 ### Medium Priority
+
 4. **Breeding Cooldown** — Prevent immediate re-breeding
 5. **Whale Status Enhancement** — Show aether mist production rate
 
 ### Low Priority
+
 6. **Visual Feedback** — Color hints for traits, status animations
 7. **Integration Tests** — Full end-to-end loop: move → breed → trade
 
