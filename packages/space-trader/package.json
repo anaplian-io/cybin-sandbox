@@ -9,9 +9,12 @@
     "whale-song": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "bundle": "esbuild src/index.tsx --outfile=dist/index.js --platform=node --bundle --target=node22 --format=esm --minify",
+    "build": "tsc --noEmit && npm run bundle",
     "test": "jest --coverage",
-    "lint": "eslint src && prettier --check src"
+    "clean": "rm -rf dist coverage",
+    "lint": "eslint src && prettier --check src",
+    "start": "node dist/index.js"
   },
   "keywords": [
     "game",
@@ -24,11 +27,13 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^25.3.0",
     "@types/react": "^19.2.14",
+    "esbuild": "^0.27.3",
     "jest": "^30.2.0",
     "ts-jest": "^29.4.6"
   },
   "dependencies": {
     "ink": "^6.8.0",
-    "react": "^19.2.4"
+    "react": "^19.2.4",
+    "react-devtools-core": "^7.0.1"
   }
 }
