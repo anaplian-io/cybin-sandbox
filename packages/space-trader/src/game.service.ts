@@ -6,23 +6,28 @@ import {
   GameState,
   AetherMistConfig,
   TradeConfig,
+  TurnCostConfig,
   defaultAetherMistConfig,
   defaultTradeConfig,
+  defaultTurnCostConfig,
 } from './game.types';
 
 export class GameService {
   private breedingService: BreedingService;
   private aetherMistConfig: AetherMistConfig;
   private tradeConfig: TradeConfig;
+  private turnCostConfig: TurnCostConfig;
 
   constructor(
     random?: RandomGenerator,
     aetherMistConfig: AetherMistConfig = defaultAetherMistConfig,
     tradeConfig: TradeConfig = defaultTradeConfig,
+    turnCostConfig: TurnCostConfig = defaultTurnCostConfig,
   ) {
     this.breedingService = new BreedingService(random ?? Math.random);
     this.aetherMistConfig = aetherMistConfig;
     this.tradeConfig = tradeConfig;
+    this.turnCostConfig = turnCostConfig;
   }
 
   initialize(): GameState {
@@ -32,7 +37,7 @@ export class GameService {
       shipPosition: { x: 0, y: 0 },
       whales: [createWhale('Aurora', ['speed', 'capacity'])],
       turn: 0,
-      aetherMist: 50, // Starting amount
+      aetherMist: 150, // Starting amount (increased to cover initial movement costs)
       whaleStatusOpen: false,
       waystationMenuOpen: false,
       tradeInventory: {
@@ -89,10 +94,19 @@ export class GameService {
       };
     }
 
+    // Calculate turn cost for movement
+    const distance =
+      Math.abs(targetX - state.shipPosition.x) +
+      Math.abs(targetY - state.shipPosition.y);
+    const turnCost =
+      this.turnCostConfig.baseCost +
+      distance * this.turnCostConfig.movementMultiplier;
+
     return {
       ...state,
       shipPosition: { x: targetX, y: targetY },
       breedingOpportunity,
+      aetherMist: state.aetherMist - turnCost,
     };
   }
 
@@ -208,4 +222,5 @@ export type {
   Position,
   AetherMistConfig,
   TradeConfig,
+  TurnCostConfig,
 } from './game.types';
