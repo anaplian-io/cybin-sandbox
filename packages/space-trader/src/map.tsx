@@ -62,8 +62,18 @@ export function StatusDisplay({ gameState }: { gameState: GameState }) {
     aetherMist,
     breedingOpportunity,
     tradeInventory,
+    seasonState,
   } = gameState;
   const primaryWhale = whales[0];
+
+  // Format season info if available
+  const seasonDisplay =
+    seasonState && seasonState.currentSeason ? (
+      <Text>
+        <Newline />
+        {getSeasonDisplay(seasonState)}
+      </Text>
+    ) : null;
 
   return (
     <Text>
@@ -94,7 +104,54 @@ export function StatusDisplay({ gameState }: { gameState: GameState }) {
         <Text color="yellow">Trade Inventory: </Text>
         <Text>{tradeInventory.aetherMist} aether mist</Text>
       </Text>
+
+      {/* Season environmental pressure */}
+      {seasonDisplay}
     </Text>
+  );
+}
+
+function getSeasonDisplay(seasonState: {
+  currentSeason: string;
+  turnInSeason: number;
+}): React.ReactNode {
+  const season = seasonState.currentSeason;
+  let temperatureEmoji = '';
+  let currentsEmoji = '';
+
+  switch (season) {
+    case 'spring':
+      temperatureEmoji = '🌳';
+      currentsEmoji = '🍃';
+      break;
+    case 'summer':
+      temperatureEmoji = '☀️';
+      currentsEmoji = '🍃';
+      break;
+    case 'autumn':
+      temperatureEmoji = '🍂';
+      currentsEmoji = '🌪️';
+      break;
+    case 'winter':
+      temperatureEmoji = '❄️';
+      currentsEmoji = '💨';
+      break;
+    default:
+      temperatureEmoji = '❓';
+      currentsEmoji = '❓';
+  }
+
+  return (
+    <>
+      <Text>
+        {temperatureEmoji} {season.charAt(0).toUpperCase() + season.slice(1)}
+      </Text>
+      <Text color="cyan">
+        {' '}
+        | Turn {seasonState.turnInSeason + 1} in season{' '}
+      </Text>
+      <Text>{currentsEmoji}</Text>
+    </>
   );
 }
 
