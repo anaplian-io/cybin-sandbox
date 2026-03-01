@@ -341,13 +341,13 @@ describe('Game', () => {
       const service = new GameService();
       let state = service.initialize();
 
-      // Initial aether mist: 50
+      // Initial aether mist: 150 (increased to cover movement costs)
       const initialInventory = state.tradeInventory.aetherMist;
 
       // Sell 10 units at 1 inventory each = +10
       state = service.sellAetherMist(state, 10);
 
-      expect(state.aetherMist).toBe(40);
+      expect(state.aetherMist).toBe(140);
       expect(state.tradeInventory.aetherMist).toBe(initialInventory + 10);
     });
 
@@ -355,8 +355,8 @@ describe('Game', () => {
       const service = new GameService();
       const state = service.initialize();
 
-      // Player has 50 aether mist, selling 60 should fail
-      const newState = service.sellAetherMist(state, 60);
+      // Player has 150 aether mist, selling 200 should fail
+      const newState = service.sellAetherMist(state, 200);
 
       expect(newState).toBe(state); // No change
     });

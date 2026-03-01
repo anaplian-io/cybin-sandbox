@@ -22,6 +22,17 @@ export const defaultAetherMistConfig: AetherMistConfig = {
   consumptionPenalty: 0.3, // -30% for consumption trait
 };
 
+// Turn cost configuration
+export interface TurnCostConfig {
+  baseCost: number;
+  movementMultiplier: number;
+}
+
+export const defaultTurnCostConfig: TurnCostConfig = {
+  baseCost: 1,
+  movementMultiplier: 0.5,
+};
+
 // Trade price configuration
 export interface TradeConfig {
   buyPricePerUnit: number;
