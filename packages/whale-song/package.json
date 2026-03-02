@@ -1,0 +1,31 @@
+{
+  "name": "@anaplian/whale-song",
+  "version": "0.1.0",
+  "license": "MIT",
+  "bin": "dist/cli.js",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:smoke": "node dist/cli.js --version",
+    "start": "node dist/cli.js",
+    "clean": "rm -rf dist node_modules coverage"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^18.0.32",
+    "@vitejs/plugin-react": "^5.1.4",
+    "@vitest/coverage-v8": "^4.0.18",
+    "happy-dom": "^20.7.0",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "ink": "^6.8.0",
+    "meow": "^13.2.0",
+    "react": "^19.2.4"
+  }
+}

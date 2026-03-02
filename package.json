@@ -9,8 +9,9 @@
     "format": "npm run format:ts",
     "build:ts": "lerna run build --stream",
     "test:ts": "lerna run test --stream",
+    "test:smoke": "lerna run test:smoke --stream",
     "build": "npm run lint && npm run build:ts",
-    "test": "npm run test:ts",
+    "test": "npm run test:ts && npm run test:smoke",
     "release": "npm run build && npm run test",
     "clean": "lerna run clean && rm -rf node_modules",
     "prepare": "husky"
@@ -40,6 +41,7 @@
     "husky": "^9.1.7",
     "lerna": "^9.0.4",
     "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1"
   }
