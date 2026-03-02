@@ -6,6 +6,7 @@ import {
   getTile,
   isBreedingGround,
 } from '../data/index.js';
+import { createTile, getKey } from '../utilities/tile.js';
 
 describe('world', () => {
   it('creates a world with correct dimensions', () => {
@@ -63,5 +64,29 @@ describe('world', () => {
     expect(isBreedingGround(world, 2, 10)).toBe(true);
     expect(isBreedingGround(world, 5, 5)).toBe(false); // Island
     expect(isBreedingGround(world, 7, 7)).toBe(false); // Waystation
+  });
+});
+
+describe('utilities', () => {
+  describe('getKey', () => {
+    it('creates coordinate key', () => {
+      expect(getKey(3, 5)).toBe('3,5');
+    });
+  });
+
+  describe('createTile', () => {
+    it('creates a tile with default type', () => {
+      const tile = createTile(2, 4);
+
+      expect(tile.x).toBe(2);
+      expect(tile.y).toBe(4);
+      expect(tile.type).toBe('empty');
+    });
+
+    it('creates a tile with custom type', () => {
+      const tile = createTile(2, 4, 'island');
+
+      expect(tile.type).toBe('island');
+    });
   });
 });

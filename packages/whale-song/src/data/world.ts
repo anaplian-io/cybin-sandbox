@@ -1,11 +1,4 @@
-import { getKey } from './world.utils.js';
-
-export interface Tile {
-  type: string;
-  x: number;
-  y: number;
-  name?: string; // Named locations (waystations, breeding grounds)
-}
+import { getKey, createTile, type Tile } from '../utilities/tile.js';
 
 export interface World {
   width: number;
@@ -81,13 +74,4 @@ export function getTile(world: World, x: number, y: number): Tile | undefined {
 export function isBreedingGround(world: World, x: number, y: number): boolean {
   const tile = world.tiles.get(getKey(x, y));
   return tile?.type === 'breedingGround';
-}
-
-export function createTile(
-  x: number,
-  y: number,
-  type: string = 'empty',
-  name?: string,
-): Tile {
-  return { x, y, type, name };
 }
