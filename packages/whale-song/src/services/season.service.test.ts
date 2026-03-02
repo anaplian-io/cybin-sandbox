@@ -59,6 +59,24 @@ describe('SeasonService', () => {
       expect(pressure.breedingSuccessBonus).toBe(0.15);
     });
 
+    it('returns pressure for summer (no bonus)', () => {
+      const state = initializeSeasonState();
+      state.currentSeason = 'summer';
+
+      const pressure = getCurrentEnvironmentalPressure(state);
+
+      expect(pressure.breedingSuccessBonus).toBeUndefined();
+    });
+
+    it('returns pressure for autumn (no bonus)', () => {
+      const state = initializeSeasonState();
+      state.currentSeason = 'autumn';
+
+      const pressure = getCurrentEnvironmentalPressure(state);
+
+      expect(pressure.breedingSuccessBonus).toBeUndefined();
+    });
+
     it('returns pressure for winter (breeding penalty)', () => {
       const state = initializeSeasonState();
       state.currentSeason = 'winter';
@@ -75,7 +93,19 @@ describe('SeasonService', () => {
       expect(isBreedingBonusSeason(state)).toBe(true);
     });
 
-    it('returns false for winter', () => {
+    it('returns false for summer (no bonus)', () => {
+      const state = initializeSeasonState();
+      state.currentSeason = 'summer';
+      expect(isBreedingBonusSeason(state)).toBe(false);
+    });
+
+    it('returns false for autumn (no bonus)', () => {
+      const state = initializeSeasonState();
+      state.currentSeason = 'autumn';
+      expect(isBreedingBonusSeason(state)).toBe(false);
+    });
+
+    it('returns false for winter (penalty)', () => {
       const state = initializeSeasonState();
       state.currentSeason = 'winter';
       expect(isBreedingBonusSeason(state)).toBe(false);
@@ -83,12 +113,24 @@ describe('SeasonService', () => {
   });
 
   describe('isBreedingPenaltySeason', () => {
-    it('returns false for spring', () => {
+    it('returns false for spring (bonus)', () => {
       const state = initializeSeasonState();
       expect(isBreedingPenaltySeason(state)).toBe(false);
     });
 
-    it('returns true for winter', () => {
+    it('returns false for summer (no bonus)', () => {
+      const state = initializeSeasonState();
+      state.currentSeason = 'summer';
+      expect(isBreedingPenaltySeason(state)).toBe(false);
+    });
+
+    it('returns false for autumn (no bonus)', () => {
+      const state = initializeSeasonState();
+      state.currentSeason = 'autumn';
+      expect(isBreedingPenaltySeason(state)).toBe(false);
+    });
+
+    it('returns true for winter (penalty)', () => {
       const state = initializeSeasonState();
       state.currentSeason = 'winter';
       expect(isBreedingPenaltySeason(state)).toBe(true);
