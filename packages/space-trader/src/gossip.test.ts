@@ -46,13 +46,13 @@ describe('Gossip Service', () => {
       expect(log.entries[0].text).toBe('Fourth');
     });
 
-    it('generates proper source when faction provided', () => {
+    it('generates proper src when faction provided', () => {
       const log = initializeGossipLog();
       const newLog = addGossip(log, 'Test', 'merchant');
       expect(newLog.entries[0].source).toBe('merchant informant');
     });
 
-    it('generates proper source when no faction', () => {
+    it('generates proper src when no faction', () => {
       const log = initializeGossipLog();
       const newLog = addGossip(log, 'Test');
       expect(newLog.entries[0].source).toBe('traveler');
@@ -90,7 +90,7 @@ describe('Gossip Service', () => {
       // This test verifies the else branch when factions is undefined/empty
       // We can't easily mock without exposing internals, so we test via the service
       const gossip = generateRandomGossip(10);
-      // The source should be set correctly whether faction exists or not
+      // The src should be set correctly whether faction exists or not
       expect(gossip.source).toBeDefined();
     });
   });
