@@ -1,12 +1,30 @@
 import type { World } from '../utilities/world-data.js';
-import type { GameState } from '../types/game.types.js';
-import type { SeasonState } from '../types/season.js';
+import type {
+  GameState,
+  SeasonState,
+  WorldConfig,
+} from '../types/game.types.js';
+import {
+  DEFAULT_WORLD_CONFIG,
+  ISLAND_LOCATIONS,
+  WAYSTATION_LOCATIONS,
+  BREEDING_LOCATIONS,
+} from '../data/world-config.js';
 
 export class GameService {
-  constructor(private readonly initialSeasonState?: Partial<SeasonState>) {}
+  constructor(
+    private readonly worldConfig: WorldConfig = DEFAULT_WORLD_CONFIG,
+    private readonly initialSeasonState?: Partial<SeasonState>,
+  ) {}
 
-  initializeWorld(width: number = 20, height: number = 15): GameState {
-    const world = createWorldInternal(width, height);
+  initializeWorld(): GameState {
+    const world = createWorldInternal(
+      this.worldConfig.width,
+      this.worldConfig.height,
+      ISLAND_LOCATIONS,
+      WAYSTATION_LOCATIONS,
+      BREEDING_LOCATIONS,
+    );
     const seasonState: SeasonState = this.createSeasonState();
 
     return {
@@ -40,7 +58,13 @@ export class GameService {
 }
 
 // Internal helper to create world (used by tests too)
-export function createWorldInternal(width: number, height: number): World {
+export function createWorldInternal(
+  width: number,
+  height: number,
+  islandLocations: { x: number; y: number }[],
+  waystationLocations: { x: number; y: number; name?: string }[],
+  breedingLocations: { x: number; y: number; name?: string }[],
+): World {
   const tiles = new Map<
     string,
     { type: string; x: number; y: number; name?: string }
@@ -52,43 +76,22 @@ export function createWorldInternal(width: number, height: number): World {
     }
   }
 
-  // Island positions (x, y)
-  const islandPositions: [number, number][] = [
-    [5, 5],
-    [10, 8],
-    [15, 3],
-    [3, 12],
-  ];
-
-  // Waystation positions (x, y, name)
-  const waystationPositions: [number, number, string][] = [
-    [7, 7, 'Circuit Waystation'],
-    [12, 5, 'Vortex Outpost'],
-  ];
-
-  // Breeding ground positions (x, y, name)
-  const breedingPositions: [number, number, string][] = [
-    [2, 10, 'Whispering Shoals'],
-    [16, 8, 'Aurora Drift'],
-    [9, 2, 'Skyward Nest'],
-  ];
-
   // Add islands
-  for (const [x, y] of islandPositions) {
+  for (const { x, y } of islandLocations) {
     if (x < width && y < height) {
       tiles.set(`${x},${y}`, { type: 'island', x, y });
     }
   }
 
   // Add waystations
-  for (const [x, y, name] of waystationPositions) {
+  for (const { x, y, name } of waystationLocations) {
     if (x < width && y < height) {
       tiles.set(`${x},${y}`, { type: 'waystation', x, y, name });
     }
   }
 
   // Add breeding grounds
-  for (const [x, y, name] of breedingPositions) {
+  for (const { x, y, name } of breedingLocations) {
     if (x < width && y < height) {
       tiles.set(`${x},${y}`, { type: 'breedingGround', x, y, name });
     }
