@@ -1,4 +1,4 @@
-import { getKey } from './world.utils.js';
+import { getKey, createTile } from '../utilities/tile.js';
 
 export interface Tile {
   type: string;
@@ -81,13 +81,4 @@ export function getTile(world: World, x: number, y: number): Tile | undefined {
 export function isBreedingGround(world: World, x: number, y: number): boolean {
   const tile = world.tiles.get(getKey(x, y));
   return tile?.type === 'breedingGround';
-}
-
-export function createTile(
-  x: number,
-  y: number,
-  type: string = 'empty',
-  name?: string,
-): Tile {
-  return { x, y, type, name };
 }

@@ -1,4 +1,4 @@
-import { World } from '../data/world.js';
+import type { World } from '../utilities/world-data.js';
 import type { Whale } from './whale.js';
 import type { SeasonState } from './season.js';
 
