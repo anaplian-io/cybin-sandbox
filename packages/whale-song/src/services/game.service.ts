@@ -10,12 +10,23 @@ import {
   WAYSTATION_LOCATIONS,
   BREEDING_LOCATIONS,
 } from '../data/world-config.js';
+import { BreedingService } from './breeding.service.js';
+import {
+  advanceTurn,
+  getCurrentEnvironmentalPressure,
+  isBreedingBonusSeason,
+} from './season.service.js';
 
 export class GameService {
   constructor(
     private readonly worldConfig: WorldConfig = DEFAULT_WORLD_CONFIG,
     private readonly initialSeasonState?: Partial<SeasonState>,
+    private readonly breedingService?: BreedingService,
   ) {}
+
+  getBreedingService(): BreedingService {
+    return this.breedingService ?? new BreedingService(() => Math.random());
+  }
 
   initializeWorld(): GameState {
     const world = createWorldInternal(
@@ -54,6 +65,68 @@ export class GameService {
       turnInSeason: this.initialSeasonState.turnInSeason ?? 0,
       totalTurnsInCycle: this.initialSeasonState.totalTurnsInCycle ?? 0,
     };
+  }
+
+  breedWhales(
+    state: GameState,
+    parentAIndex: number,
+    parentBIndex: number,
+  ): GameState {
+    const parentA = state.whales[parentAIndex];
+    const parentB = state.whales[parentBIndex];
+
+    if (!parentA || !parentB) {
+      throw new Error('Invalid whale indices');
+    }
+
+    const offspringTraits = this.getBreedingService().breedTraits(
+      parentA.traits,
+      parentB.traits,
+    );
+
+    const offspring = {
+      ...parentA,
+      traits: offspringTraits,
+      generation: Math.max(parentA.generation, parentB.generation) + 1,
+    };
+
+    return {
+      ...state,
+      whales: [...state.whales, offspring],
+      turn: state.turn + 1,
+    };
+  }
+
+  advanceTurn(state: GameState): GameState {
+    const seasonState = state.seasonState ?? {
+      currentSeason: 'spring',
+      turnInSeason: 0,
+      totalTurnsInCycle: 80,
+    };
+    const newSeasonState = advanceTurn(seasonState);
+    return {
+      ...state,
+      seasonState: newSeasonState,
+      turn: state.turn + 1,
+    };
+  }
+
+  getEnvironmentalPressure(state: GameState) {
+    const seasonState = state.seasonState ?? {
+      currentSeason: 'spring',
+      turnInSeason: 0,
+      totalTurnsInCycle: 80,
+    };
+    return getCurrentEnvironmentalPressure(seasonState);
+  }
+
+  isBreedingBonusSeason(state: GameState): boolean {
+    const seasonState = state.seasonState ?? {
+      currentSeason: 'spring',
+      turnInSeason: 0,
+      totalTurnsInCycle: 80,
+    };
+    return isBreedingBonusSeason(seasonState);
   }
 }
 
