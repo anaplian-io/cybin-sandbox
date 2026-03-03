@@ -2,6 +2,8 @@ import type { World } from '../utilities/world-data.js';
 import type { Whale } from './whale.js';
 import type { SeasonState } from './season.js';
 
+export type { SeasonState };
+
 export interface Position {
   x: number;
   y: number;
@@ -42,6 +44,17 @@ export interface TradeConfig {
 export const defaultTradeConfig: TradeConfig = {
   buyPricePerUnit: 2,
   sellPricePerUnit: 1,
+};
+
+// World configuration
+export interface WorldConfig {
+  width: number;
+  height: number;
+}
+
+export const DEFAULT_WORLD_CONFIG: WorldConfig = {
+  width: 20,
+  height: 15,
 };
 
 // Faction types for gossip sources

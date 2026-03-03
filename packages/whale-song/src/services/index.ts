@@ -20,3 +20,5 @@ export {
   generateRandomGossipForGameState,
   addRandomGossipToGameState,
 } from './gossip.service.js';
+
+export { GameService } from './game.service.js';
