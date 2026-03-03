@@ -1,4 +1,5 @@
 // Data barrel for Whale Song
+// This file now only exports data; logic has moved to utilities/
 
 export {
   createWorld,
@@ -6,4 +7,5 @@ export {
   WORLD_HEIGHT,
   getTile,
   isBreedingGround,
-} from './world.js';
+} from '../utilities/world-data.js';
+export { type Tile } from '../utilities/tile.js';
