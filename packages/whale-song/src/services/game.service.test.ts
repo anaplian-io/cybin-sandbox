@@ -1,8 +1,34 @@
 import { describe, it, expect } from 'vitest';
 import { GameService, createWorldInternal } from './game.service.js';
 import { DEFAULT_WORLD_CONFIG } from '../data/world-config.js';
+import type { Whale } from '../types/whale.js';
+
+const DEFAULT_WHALE: Whale = {
+  id: 'default-whale',
+  name: 'Default Whale',
+  traits: [],
+  stats: { health: 100, maxHealth: 100, aetherMistProduction: 1 },
+  generation: 1,
+};
 
 describe('GameService', () => {
+  it('uses default breeding service when none provided', () => {
+    const service = new GameService();
+    expect(service).toBeDefined();
+
+    // Verify the default breeding service works
+    const gameState = service.initializeWorld();
+    expect(gameState.whales).toEqual([]);
+  });
+
+  it('uses default breeding service with custom world config', () => {
+    const service = new GameService({ width: 15, height: 10 });
+    const gameState = service.initializeWorld();
+
+    expect(gameState.world.width).toBe(15);
+    expect(gameState.world.height).toBe(10);
+  });
+
   it('initializes world with default dimensions and positions', () => {
     const service = new GameService();
     const gameState = service.initializeWorld();
@@ -122,6 +148,130 @@ describe('GameService', () => {
     const gameState = service.initializeWorld();
 
     expect(gameState.seasonState?.currentSeason).toBe('spring');
+  });
+
+  describe('breedWhales', () => {
+    it('creates offspring with inherited traits using default breeding service', () => {
+      const service = new GameService();
+      const state = service.initializeWorld();
+
+      // Add two parent whales with different traits
+      state.whales = [
+        { ...DEFAULT_WHALE, id: 'a', name: 'Parent A', traits: ['speed'] },
+        { ...DEFAULT_WHALE, id: 'b', name: 'Parent B', traits: ['resilience'] },
+      ];
+
+      const newState = service.breedWhales(state, 0, 1);
+
+      expect(newState.whales.length).toBe(3);
+      const offspring = newState.whales[2];
+      expect(offspring.generation).toBe(2);
+    });
+
+    it('throws error for invalid whale indices', () => {
+      const service = new GameService();
+
+      const state = service.initializeWorld();
+      expect(() => service.breedWhales(state, 0, 1)).toThrow(
+        'Invalid whale indices',
+      );
+    });
+  });
+
+  describe('advanceTurn', () => {
+    it('increments turn count and season state', () => {
+      const service = new GameService();
+
+      const state = service.initializeWorld();
+      expect(state.seasonState?.turnInSeason).toBe(0);
+
+      const newState = service.advanceTurn(state);
+      expect(newState.turn).toBe(2);
+      expect(newState.seasonState?.turnInSeason).toBe(1);
+    });
+
+    it('advances season when turn limit reached', () => {
+      const service = new GameService(DEFAULT_WORLD_CONFIG, {
+        currentSeason: 'spring',
+        turnInSeason: 19,
+      });
+
+      const state = service.initializeWorld();
+      expect(state.seasonState?.currentSeason).toBe('spring');
+
+      const newState = service.advanceTurn(state);
+      expect(newState.seasonState?.currentSeason).toBe('summer');
+      expect(newState.seasonState?.turnInSeason).toBe(0);
+    });
+  });
+
+  describe('getEnvironmentalPressure', () => {
+    it('returns pressure for current season', () => {
+      const service = new GameService();
+
+      const state = service.initializeWorld();
+      const pressure = service.getEnvironmentalPressure(state);
+
+      expect(pressure.temperature).toBe('mild');
+    });
+  });
+
+  describe('isBreedingBonusSeason', () => {
+    it('returns true for spring season', () => {
+      const service = new GameService();
+
+      const state = service.initializeWorld();
+      expect(service.isBreedingBonusSeason(state)).toBe(true);
+    });
+
+    it('returns false for winter season', () => {
+      const service = new GameService(DEFAULT_WORLD_CONFIG, {
+        currentSeason: 'winter',
+      });
+
+      const state = service.initializeWorld();
+      expect(service.isBreedingBonusSeason(state)).toBe(false);
+    });
+
+    it('uses default season when seasonState is undefined in GameState', () => {
+      const service = new GameService();
+
+      const state = service.initializeWorld();
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - testing fallback behavior with undefined seasonState
+      delete state.seasonState;
+
+      expect(service.isBreedingBonusSeason(state)).toBe(true);
+    });
+  });
+
+  describe('advanceTurn with undefined seasonState', () => {
+    it('uses default season when seasonState is undefined', () => {
+      const service = new GameService();
+
+      const state = service.initializeWorld();
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - testing fallback behavior with undefined seasonState
+      delete state.seasonState;
+
+      const newState = service.advanceTurn(state);
+      expect(newState.turn).toBe(2);
+      expect(newState.seasonState?.currentSeason).toBe('spring');
+    });
+  });
+
+  describe('getEnvironmentalPressure with undefined seasonState', () => {
+    it('uses default season when seasonState is undefined', () => {
+      const service = new GameService();
+
+      const state = service.initializeWorld();
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - testing fallback behavior with undefined seasonState
+      delete state.seasonState;
+
+      const pressure = service.getEnvironmentalPressure(state);
+      expect(pressure.temperature).toBe('mild');
+    });
   });
 });
 
