@@ -22,3 +22,6 @@ export {
 } from './gossip.service.js';
 
 export { GameService } from './game.service.js';
+
+// Re-export views for convenience
+export { MapDisplay, StatusDisplay, ControlsDisplay } from '../views/index.js';
