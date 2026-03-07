@@ -24,4 +24,9 @@ export {
 export { GameService } from './game.service.js';
 
 // Re-export views for convenience
-export { MapDisplay, StatusDisplay, ControlsDisplay } from '../views/index.js';
+export {
+  MapDisplay,
+  StatusDisplay,
+  ControlsDisplay,
+  MenuDisplay,
+} from '../views/index.js';
