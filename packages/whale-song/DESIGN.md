@@ -404,5 +404,82 @@ src/
 
 ---
 
-_Document version: 1.0_
-_Last updated: Sun Mar 01 2026_
+## UI/UX Design
+
+See [`UI_MOCKUPS.md`](./UI_MOCKUPS.md) for detailed visual mockups and layout concepts.
+
+### Layout Philosophy (Summary)
+
+The UI follows a "clean terminal interface" approach with these key sections:
+
+| Area                 | Content                                      |
+| -------------------- | -------------------------------------------- |
+| **Top bar**          | Turn, aether mist count, season              |
+| **Left pane (70%)**  | 11×11 map viewport centered on player        |
+| **Right pane (30%)** | Detailed status: position, whales, inventory |
+| **Bottom bar**       | Keyboard shortcuts reference                 |
+| **Gossip log**       | Scrollable history of rumors                 |
+
+### Key Components
+
+The UI follows a "clean terminal interface" approach:
+
+| Element      | Style                                                |
+| ------------ | ---------------------------------------------------- |
+| Header       | Simple stats bar (turn, aether, season)              |
+| Map view     | 11×11 viewport centered on player, ASCII-style tiles |
+| Status panel | Right-side details (whales, inventory)               |
+| Controls bar | Bottom keyboard shortcuts                            |
+| Gossip log   | Scrollable history at bottom                         |
+
+### Key Components (See [`UI_MOCKUPS.md`](./UI_MOCKUPS.md) for ASCII previews)
+
+1. **GameApp** - Main entry point, handles keyboard input
+2. **MapDisplay** - Renders the 11×11 viewport around player
+3. **StatusDisplay** - Shows turn, position, whales, resources
+4. **ControlsDisplay** - Keyboard shortcuts reference
+5. **BreedingMenu** - Modal menu for breeding whales
+6. **WaystationMenu** - Modal menu for trading
+7. **WhaleStatusDisplay** - Full whale fleet details
+
+### Color Palette (Ink)
+
+- Player whale: 🐳 cyan
+- Islands: ⛓️ gray/brown
+- Waystations: 🏢 yellow/orange
+- Breeding grounds: 🌱 green
+- Header: Cyan text on dark background
+
+---
+
+## Next Steps (Immediate)
+
+1. **Create type definitions** in `src/types/`:
+   - `types/game.ts` (GameState, Position, Whale, etc.)
+   - `types/season.ts` (SeasonState, SeasonConfig)
+   - `types/gossip.ts` (Gossip, Faction)
+
+2. **Create data files** in `src/data/`:
+   - `data/constants.ts` (default values, configs)
+   - `data/world.ts` (map layouts, locations)
+
+3. **Implement services** in `src/services/`:
+   - `breeding.ts` (already has tests, finalize)
+   - `season.ts` (already has tests, finalize)
+   - `gossip.ts` (new)
+   - `game.service.ts` (migrate from space-trader)
+
+4. **Build views** in `src/views/`:
+   - `app.tsx` (main component)
+   - `map.tsx` (viewport rendering)
+   - `menu.tsx` (breeding/trade menus)
+
+5. **Hook up CLI** in `cli.tsx`:
+   - Wire services to game loop
+   - Connect input handling to service calls
+   - Render views with current state
+
+---
+
+_Document version: 1.1_
+_Last updated: Wed Mar 06 2026 (added UI_MOCKUPS.md reference)_
