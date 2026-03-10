@@ -1,48 +1,9 @@
 import React from 'react';
 import { Box, Text } from 'ink';
+import type { GameState } from '../types/game.types.js';
 
 type StatusDisplayProps = {
   gameState: GameState;
-};
-
-type GameState = {
-  world: World;
-  shipPosition: Position;
-  whales: Whale[];
-  turn: number;
-  aetherMist: number;
-  tradeInventory: { aetherMist: number };
-  seasonState?: SeasonState;
-};
-
-type World = {
-  width: number;
-  height: number;
-  tiles: Map<string, Tile>;
-};
-
-type Position = {
-  x: number;
-  y: number;
-};
-
-type Whale = {
-  id: string;
-  traits: Record<string, number>;
-  generation: number;
-};
-
-type SeasonState = {
-  currentSeason: string;
-  turnInSeason: number;
-  totalTurnsInCycle: number;
-};
-
-type Tile = {
-  type: string;
-  x: number;
-  y: number;
-  name?: string;
 };
 
 /**
