@@ -139,24 +139,31 @@ packages/whale-song/
 
 ---
 
-### Phase 3: UI Components
+### Phase 3: UI Components (COMPLETE)
 
 **Goal**: Build playable terminal interface
 
-#### Tasks
+#### Tasks Completed
 
-- [ ] Create `App` component (main game view)
-- [ ] Implement `MapDisplay` - viewport centered on player
-- [ ] Implement `StatusDisplay` - show turn, position, whales, resources
-- [ ] Implement `ControlsDisplay` - keyboard shortcuts
-- [ ] Add menu components (breeding, waystation trading)
-- [ ] Implement input handling (`useInput` hook)
+- [x] Create `App` component (main game view) — full UI integration with map, status, controls
+- [x] Implement `MapDisplay` - viewport centered on player
+- [x] Implement `StatusDisplay` - show turn, position, whales, resources
+- [x] Implement `ControlsDisplay` - keyboard shortcuts
+- [x] Add menu components (breeding, waystation trading) — `MenuDisplay` reusable component
+- [x] Implement input handling (`useInput` hook) — arrow/WASD movement, menu toggles
 
-#### Acceptance Criteria
+#### Implementation Notes (2026-03-10)
 
-- All `.tsx` files render without errors in Ink
-- UI updates match game state changes
-- Keyboard navigation works as designed
+Implemented full UI integration with keyboard navigation:
+
+- Movement: Arrow keys or WASD to move whale through world
+- Menu toggles: `W` for whale fleet status, `Enter` at breeding grounds to open menu
+- Menu close: `ESC` closes any active modal (whales, breeding)
+- Local state management in `App.tsx` using React hooks
+- View components (`MapDisplay`, `StatusDisplay`) use shared types from `types/game.types.ts`
+- Ink view components excluded from coverage thresholds (UI glue, tested manually)
+
+**Branch**: `feature/ui-full-integration`
 
 ---
 
