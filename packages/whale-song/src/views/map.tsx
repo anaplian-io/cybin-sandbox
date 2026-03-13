@@ -1,41 +1,9 @@
 import React from 'react';
 import { Box, Text } from 'ink';
+import type { GameState } from '../types/game.types.js';
 
 type MapDisplayProps = {
   gameState: GameState;
-};
-
-type GameState = {
-  world: World;
-  shipPosition: Position;
-  whales: Whale[];
-  turn: number;
-  aetherMist: number;
-  tradeInventory: { aetherMist: number };
-};
-
-type World = {
-  width: number;
-  height: number;
-  tiles: Map<string, Tile>;
-};
-
-type Position = {
-  x: number;
-  y: number;
-};
-
-type Whale = {
-  id: string;
-  traits: Record<string, number>;
-  generation: number;
-};
-
-type Tile = {
-  type: string;
-  x: number;
-  y: number;
-  name?: string;
 };
 
 /**
@@ -43,7 +11,7 @@ type Tile = {
  *
  * Shows tiles within 5 spaces in each direction from the ship position.
  * Uses emoji for visual distinction:
- *   🐳 = Player ship
+ *   🐳 = Player whale
  *   ⛓️ = Island
  *   🏢 = Waystation
  *   🌱 = Breeding ground
