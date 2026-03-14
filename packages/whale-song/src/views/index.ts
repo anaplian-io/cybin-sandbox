@@ -1,6 +1,8 @@
 export { App } from './app.js';
 export { ControlsDisplay } from './controls.js';
 export { GossipDisplay } from './gossip.js';
+import EvolutionDisplay from './evolution.js';
+export { EvolutionDisplay };
 import HelpDisplay from './help.js';
 export { HelpDisplay };
 import MapDisplay from './map.js';

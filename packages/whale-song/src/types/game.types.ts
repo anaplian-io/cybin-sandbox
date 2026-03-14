@@ -97,7 +97,7 @@ export interface GossipTemplate {
 // Available evolution templates for procedural generation
 export interface EvolutionTemplate {
   text: string;
-  factions?: Faction[];
+  factions: Faction[];
 }
 
 // Export gossip templates for game types
@@ -144,7 +144,7 @@ export const gossipTemplates: GossipTemplate[] = [
   },
 ];
 
-// Export evolution templates for game types
+// Export evolution templates for use in services and tests
 export const evolutionTemplates: EvolutionTemplate[] = [
   {
     text: 'Whale pod developed thermal resistance due to recent heatwaves.',
