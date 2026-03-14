@@ -11,9 +11,7 @@ describe('GossipDisplay', () => {
   });
 
   it('shows gossip log header when empty', () => {
-    render(
-      <GossipDisplay gossipLog={{ entries: [], maxEntries: 50 }} />,
-    );
+    render(<GossipDisplay gossipLog={{ entries: [], maxEntries: 50 }} />);
 
     expect(screen.getByText(/Gossip Log/i)).toBeDefined();
   });
@@ -38,9 +36,7 @@ describe('GossipDisplay', () => {
     );
 
     // Check that the full gossip text is present
-    expect(
-      screen.getByText(/rich breeding grounds/i),
-    ).toBeDefined();
+    expect(screen.getByText(/rich breeding grounds/i)).toBeDefined();
   });
 
   it('limits display to 5 entries (most recent)', () => {
@@ -54,9 +50,7 @@ describe('GossipDisplay', () => {
     }));
 
     render(
-      <GossipDisplay
-        gossipLog={{ entries: manyEntries, maxEntries: 50 }}
-      />,
+      <GossipDisplay gossipLog={{ entries: manyEntries, maxEntries: 50 }} />,
     );
 
     // Entries are rendered in array order, sliced to first 5
