@@ -147,23 +147,28 @@ export function App({ gameState }: AppProps) {
         shipPosition: { x: newX, y: newY },
       };
 
-      // Import gossip service dynamically to add gossip every 5 turns
-      if (newState.turn !== currentState.turn && newState.turn % 5 === 0) {
-        Promise.all([
-          import('../services/gossip.service.js'),
-          import('../services/evolution.service.js'),
-        ]).then(([gossipModule, evolutionModule]) => {
+      // Import services dynamically to add evolution every turn and gossip every 5 turns
+      Promise.all([
+        import('../services/evolution.service.js'),
+        newState.turn !== currentState.turn && newState.turn % 5 === 0
+          ? import('../services/gossip.service.js')
+          : null,
+      ]).then(([evolutionModule, gossipModule]) => {
+        newState.evolutionLog =
+          evolutionModule.addRandomEvolutionToGameState(newState).evolutionLog;
+
+        // Add gossip every 5 turns
+        if (
+          gossipModule &&
+          newState.turn !== currentState.turn &&
+          newState.turn % 5 === 0
+        ) {
           newState.gossipLog =
             gossipModule.addRandomGossipToGameState(newState).gossipLog;
-          newState.evolutionLog =
-            evolutionModule.addRandomEvolutionToGameState(
-              newState,
-            ).evolutionLog;
-          setCurrentState(newState);
-        });
-      } else {
+        }
+
         setCurrentState(newState);
-      }
+      });
     }
   });
 
