@@ -31,6 +31,7 @@ export {
 } from './evolution.service.js';
 
 export { GameService } from './game.service.js';
+export { TradeService } from './trade.service.js';
 
 // Re-export views for convenience
 export {
