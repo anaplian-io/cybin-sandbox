@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text, useInput } from 'ink';
 import { GameService } from '../services/game.service.js';
+import { TradeService } from '../services/trade.service.js';
 import { MapDisplay } from './map.js';
 import { StatusDisplay } from './status.js';
 import { ControlsDisplay } from './controls.js';
@@ -20,19 +21,24 @@ function initializeGameState(): GameState {
   return service.initializeWorld();
 }
 
+// Initialize services
+const tradeService = new TradeService();
+
 export function App({ gameState }: AppProps) {
   const [currentState, setCurrentState] = React.useState<GameState>(
     gameState ?? initializeGameState(),
   );
   const [breedingMenuOpen, setBreedingMenuOpen] = React.useState(false);
   const [whaleStatusOpen, setWhaleStatusOpen] = React.useState(false);
+  const [waystationMenuOpen, setWaystationMenuOpen] = React.useState(false);
 
   useInput((input) => {
-    if (breedingMenuOpen || whaleStatusOpen) {
+    if (breedingMenuOpen || whaleStatusOpen || waystationMenuOpen) {
       if (input === '\u001B') {
         // ESC key closes any open menu
         setBreedingMenuOpen(false);
         setWhaleStatusOpen(false);
+        setWaystationMenuOpen(false);
       }
       // Handle Enter on breeding menu
       if (input === '\r' && breedingMenuOpen) {
@@ -69,11 +75,27 @@ export function App({ gameState }: AppProps) {
           setCurrentState(newState);
           setBreedingMenuOpen(false);
         }
+      } else if (waystationMenuOpen) {
+        // Handle Enter on waystation menu
+        if (
+          waystationMenuItems[0].value === 'buy' &&
+          currentState.tradeInventory.aetherMist >= 0
+        ) {
+          // Buy aether mist (default 10 units)
+          const amount = 10;
+          const newState = tradeService.buy(currentState, amount);
+          setCurrentState(newState);
+          setWaystationMenuOpen(false);
+        } else if (waystationMenuItems[1].value === 'sell') {
+          // Sell aether mist (default 5 units)
+          const amount = 5;
+          const newState = tradeService.sell(currentState, amount);
+          setCurrentState(newState);
+          setWaystationMenuOpen(false);
+        }
       }
       return;
     }
-
-    // Movement controls
 
     // Movement controls
     const { x, y } = currentState.shipPosition;
@@ -101,11 +123,13 @@ export function App({ gameState }: AppProps) {
         setWhaleStatusOpen(true);
         return;
       case '\r': // Enter
-        // Check if at breeding ground to open menu
+        // Check if at breeding ground or waystation to open menu
         const key = `${x},${y}`;
         const tile = currentState.world.tiles.get(key);
         if (tile?.type === 'breedingGround') {
           setBreedingMenuOpen(true);
+        } else if (tile?.type === 'waystation') {
+          setWaystationMenuOpen(true);
         }
         return;
     }
@@ -174,6 +198,20 @@ export function App({ gameState }: AppProps) {
               description: 'Navigate to breeding grounds with a wild pod first',
             },
           ];
+
+  // Waystation menu items - show trade options when at waystation
+  const waystationMenuItems = [
+    {
+      label: `Buy aether mist (${tradeService.getBuyPrice()} each)`,
+      value: 'buy',
+      description: 'Purchase aether mist for your inventory',
+    },
+    {
+      label: `Sell aether mist (${tradeService.getSellPrice()} each)`,
+      value: 'sell',
+      description: 'Sell excess aether mist for credits',
+    },
+  ];
 
   return (
     <Box flexDirection="column" height="100%">
