@@ -5,6 +5,7 @@ import { MapDisplay } from './map.js';
 import { StatusDisplay } from './status.js';
 import { ControlsDisplay } from './controls.js';
 import { MenuDisplay } from './menu.js';
+import { GossipDisplay } from './gossip.js';
 import type { GameState } from '../types/game.types.js';
 
 type AppProps = {
@@ -81,7 +82,18 @@ export function App({ gameState }: AppProps) {
         ...currentState,
         shipPosition: { x: newX, y: newY },
       };
-      setCurrentState(newState);
+
+      // Import gossip service dynamically to add gossip every 5 turns
+      if (newState.turn !== currentState.turn && newState.turn % 5 === 0) {
+        import('../services/gossip.service.js').then(
+          ({ addRandomGossipToGameState }) => {
+            newState.gossipLog = addRandomGossipToGameState(newState).gossipLog;
+            setCurrentState(newState);
+          },
+        );
+      } else {
+        setCurrentState(newState);
+      }
     }
   });
 
@@ -176,6 +188,9 @@ export function App({ gameState }: AppProps) {
         hasBreedingOpportunity={atBreedingGround}
         whaleStatusOpen={whaleStatusOpen || breedingMenuOpen}
       />
+
+      {/* Bottom: Gossip log */}
+      <GossipDisplay gossipLog={currentState.gossipLog} />
     </Box>
   );
 }

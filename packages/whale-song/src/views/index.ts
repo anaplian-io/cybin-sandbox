@@ -1,11 +1,13 @@
-// Views barrel for Whale Song
-
-export { MapDisplay } from './map.js';
-
-export { StatusDisplay } from './status.js';
-
+export { App } from './app.js';
 export { ControlsDisplay } from './controls.js';
-
-export { MenuDisplay } from './menu.js';
-
-export { default as HelpDisplay } from './help.js';
+export { GossipDisplay } from './gossip.js';
+import HelpDisplay from './help.js';
+export { HelpDisplay };
+import MapDisplay from './map.js';
+export { MapDisplay };
+import MenuDisplay from './menu.js';
+export { MenuDisplay };
+import StatusDisplay from './status.js';
+export { StatusDisplay };
+import VersionComp from './version.js';
+export { VersionComp as Version };
