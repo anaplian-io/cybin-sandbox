@@ -7,7 +7,8 @@ import { ControlsDisplay } from './controls.js';
 import { MenuDisplay } from './menu.js';
 import { GossipDisplay } from './gossip.js';
 import { EvolutionDisplay } from './evolution.js';
-import type { GameState } from '../types/game.types.js';
+import type { GameState, Whale } from '../types/index.js';
+import { TRAITS } from '../types/trait.js';
 
 type AppProps = {
   gameState?: GameState;
@@ -33,8 +34,46 @@ export function App({ gameState }: AppProps) {
         setBreedingMenuOpen(false);
         setWhaleStatusOpen(false);
       }
+      // Handle Enter on breeding menu
+      if (input === '\r' && breedingMenuOpen) {
+        // Perform the selected action
+        if (
+          breedingMenuItems[0].value === 'join' &&
+          currentState.whales.length === 1
+        ) {
+          // Add a whale to the fleet (wild pod joins)
+          const newWhale: Whale = {
+            id: `whale-${Date.now()}`,
+            name: 'Wild Pod Companion',
+            traits: [TRAITS.SPEED, TRAITS.EFFICIENCY],
+            stats: {
+              health: 100,
+              maxHealth: 100,
+              aetherMistProduction: 1,
+            },
+            generation: 1,
+          };
+          setCurrentState({
+            ...currentState,
+            whales: [...currentState.whales, newWhale],
+            turn: currentState.turn + 1,
+          });
+          setBreedingMenuOpen(false);
+        } else if (
+          breedingMenuItems[0].value === 'breed' &&
+          currentState.whales.length >= 2
+        ) {
+          // Breed two whales
+          const service = new GameService();
+          const newState = service.breedWhales(currentState, 0, 1);
+          setCurrentState(newState);
+          setBreedingMenuOpen(false);
+        }
+      }
       return;
     }
+
+    // Movement controls
 
     // Movement controls
     const { x, y } = currentState.shipPosition;
@@ -109,14 +148,32 @@ export function App({ gameState }: AppProps) {
       `${currentState.shipPosition.x},${currentState.shipPosition.y}`,
     )?.type === 'breedingGround';
 
-  // Breeding menu items (for now, just show available option)
-  const breedingMenuItems = [
-    {
-      label: 'Breed with wild pod',
-      value: 'breed',
-      description: 'Combine traits to create new offspring',
-    },
-  ];
+  // Breeding menu items - only show if you have whales
+  const breedingMenuItems =
+    currentState.whales.length >= 2
+      ? [
+          {
+            label: 'Breed whales',
+            value: 'breed',
+            description:
+              'Combine traits from your fleet to create new offspring',
+          },
+        ]
+      : currentState.whales.length === 1
+        ? [
+            {
+              label: 'Add whale to fleet',
+              value: 'join',
+              description: 'A wild pod joins your fleet (no breeding)',
+            },
+          ]
+        : [
+            {
+              label: 'No whales yet',
+              value: 'none',
+              description: 'Navigate to breeding grounds with a wild pod first',
+            },
+          ];
 
   return (
     <Box flexDirection="column" height="100%">
@@ -186,7 +243,17 @@ export function App({ gameState }: AppProps) {
       {/* Breeding menu modal (optional) */}
       {breedingMenuOpen && (
         <Box borderStyle="single" borderColor="green" paddingX={1} paddingY={0}>
-          <MenuDisplay title="Breeding Ground" items={breedingMenuItems} />
+          <MenuDisplay
+            title="Breeding Ground"
+            items={breedingMenuItems}
+            prompt={
+              currentState.whales.length === 0
+                ? 'Navigate with a wild pod first'
+                : breedingMenuItems[0].value === 'breed'
+                  ? 'Press number to select, ESC to cancel'
+                  : 'Press Enter to join fleet, ESC to cancel'
+            }
+          />
         </Box>
       )}
 
