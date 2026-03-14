@@ -7,3 +7,5 @@ export { StatusDisplay } from './status.js';
 export { ControlsDisplay } from './controls.js';
 
 export { MenuDisplay } from './menu.js';
+
+export { default as HelpDisplay } from './help.js';

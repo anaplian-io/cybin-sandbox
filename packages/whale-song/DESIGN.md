@@ -261,6 +261,13 @@ Implemented full UI integration with keyboard navigation:
   - When a random event occurs
   - Then I see a gossip entry from a specific faction
 
+#### CLI Help
+
+- **US09**: See usage information
+  - Given I run the CLI with `--help`
+  - When I execute the command
+  - Then I see a help message with usage, examples, and available flags
+
 ---
 
 ## Technical Decisions
