@@ -21,6 +21,15 @@ export {
   addRandomGossipToGameState,
 } from './gossip.service.js';
 
+export {
+  initializeEvolutionLog,
+  addEvolution,
+  generateRandomEvolution,
+  addEvolutionToGameState,
+  generateRandomEvolutionForGameState,
+  addRandomEvolutionToGameState,
+} from './evolution.service.js';
+
 export { GameService } from './game.service.js';
 
 // Re-export views for convenience

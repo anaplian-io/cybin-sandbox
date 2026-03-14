@@ -18,6 +18,8 @@ export {
   defaultAetherMistConfig,
   defaultTradeConfig,
   defaultTurnCostConfig,
+  gossipTemplates,
+  evolutionTemplates,
 } from './game.types.js';
 
 export type { Trait } from './trait.js';
