@@ -2,6 +2,8 @@ import React from 'react';
 import { Box, Text, useInput } from 'ink';
 import { GameService } from '../services/game.service.js';
 import { TradeService } from '../services/trade.service.js';
+import { SaveService } from '../services/save.service.js';
+import { FileSaveStorage } from '../storage/file-save-storage.js';
 import { MapDisplay } from './map.js';
 import { StatusDisplay } from './status.js';
 import { ControlsDisplay } from './controls.js';
@@ -31,9 +33,17 @@ export function App({ gameState }: AppProps) {
   const [breedingMenuOpen, setBreedingMenuOpen] = React.useState(false);
   const [whaleStatusOpen, setWhaleStatusOpen] = React.useState(false);
   const [waystationMenuOpen, setWaystationMenuOpen] = React.useState(false);
+  const [saveMenuOpen, setSaveMenuOpen] = React.useState(false);
+  const [selectedSlot, setSelectedSlot] = React.useState<number | null>(null);
   const [selectedWhaleIndex, setSelectedWhaleIndex] = React.useState<
     number | null
   >(null);
+
+  // Initialize save service
+  const saveService = React.useMemo(
+    () => new SaveService(new FileSaveStorage()),
+    [],
+  );
 
   useInput((input) => {
     if (breedingMenuOpen || whaleStatusOpen || waystationMenuOpen) {
@@ -42,6 +52,8 @@ export function App({ gameState }: AppProps) {
         setBreedingMenuOpen(false);
         setWhaleStatusOpen(false);
         setWaystationMenuOpen(false);
+        setSaveMenuOpen(false);
+        setSelectedSlot(null);
         setSelectedWhaleIndex(null);
         return;
       }
@@ -52,6 +64,12 @@ export function App({ gameState }: AppProps) {
         if (selectedIndex < currentState.whales.length) {
           setSelectedWhaleIndex(selectedIndex);
         }
+        return;
+      }
+
+      // Handle number keys 1-9 for slot selection in save menu
+      if (saveMenuOpen && /^[1-9]$/.test(input)) {
+        setSelectedSlot(parseInt(input, 10));
         return;
       }
 
@@ -115,6 +133,40 @@ export function App({ gameState }: AppProps) {
           setCurrentState(newState);
           setWaystationMenuOpen(false);
         }
+      } else if (saveMenuOpen) {
+        // Handle Enter on save menu after slot selection
+        if (
+          input === '\r' &&
+          selectedSlot !== null &&
+          saveMenuItems[0].value === 'save'
+        ) {
+          saveService
+            .save(`auto-${selectedSlot}`, currentState)
+            .then(() => {
+              setSaveMenuOpen(false);
+              setSelectedSlot(null);
+            })
+            .catch((err) => {
+              console.error('Failed to save:', err);
+            });
+        } else if (
+          input === '\r' &&
+          selectedSlot !== null &&
+          saveMenuItems[1].value === 'load'
+        ) {
+          saveService
+            .load(`auto-${selectedSlot}`)
+            .then((loadedGame) => {
+              if (loadedGame) {
+                setCurrentState(loadedGame);
+                setSaveMenuOpen(false);
+                setSelectedSlot(null);
+              }
+            })
+            .catch((err) => {
+              console.error('Failed to load:', err);
+            });
+        }
       }
       return;
     }
@@ -143,6 +195,9 @@ export function App({ gameState }: AppProps) {
         break;
       case 'W':
         setWhaleStatusOpen(true);
+        return;
+      case 'S':
+        setSaveMenuOpen(true);
         return;
       case '\r': // Enter
         // Check if at breeding ground or waystation to open menu
@@ -237,6 +292,20 @@ export function App({ gameState }: AppProps) {
     },
   ];
 
+  // Save menu items
+  const saveMenuItems = [
+    {
+      label: 'Save Game',
+      value: 'save',
+      description: 'Save current progress to a slot',
+    },
+    {
+      label: 'Load Game',
+      value: 'load',
+      description: 'Restore game from a saved slot',
+    },
+  ];
+
   return (
     <Box flexDirection="column" height="100%">
       {/* Header: Game stats */}
@@ -314,6 +383,21 @@ export function App({ gameState }: AppProps) {
                 : currentState.whales.length === 0
                   ? 'Navigate with a wild pod first'
                   : 'Press number to select whale, ESC to cancel'
+            }
+          />
+        </Box>
+      )}
+
+      {/* Save menu modal (optional) */}
+      {saveMenuOpen && (
+        <Box borderStyle="single" borderColor="blue" paddingX={1} paddingY={0}>
+          <MenuDisplay
+            title="Save System"
+            items={saveMenuItems}
+            prompt={
+              selectedSlot !== null
+                ? 'Press Enter to confirm, ESC to cancel'
+                : 'Press number (1-9) for slot, ESC to cancel'
             }
           />
         </Box>
