@@ -110,6 +110,17 @@ describe('FileSaveStorage', () => {
     expect(result).toBeNull();
   });
 
+  it('ignores non-JSON files in directory', async () => {
+    // Ensure directory exists
+    fs.mkdirSync(testDir, { recursive: true });
+
+    // Create a non-JSON file directly in save dir
+    fs.writeFileSync(testDir + '/readme.txt', 'not a save');
+
+    const saves = await storage.list();
+    expect(Object.keys(saves).length).toBe(0);
+  });
+
   it('handles corrupted save files', async () => {
     // Create test directory and a malformed JSON file
     fs.mkdirSync(testDir, { recursive: true });
