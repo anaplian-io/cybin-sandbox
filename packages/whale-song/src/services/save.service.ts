@@ -8,10 +8,13 @@ export function generateSaveId(): string {
 }
 
 // Create a save game from current state
-export function createSave(gameState: GameState): SaveGame {
+export function createSave(
+  gameState: GameState,
+  timestamp = Date.now(),
+): SaveGame {
   return {
     version: '1.0.0',
-    timestamp: Date.now(),
+    timestamp,
     gameState,
   };
 }

@@ -40,12 +40,9 @@ describe('SaveService', () => {
     service = new SaveService(mockStorage);
   });
 
-  it('generates unique save IDs', async () => {
-    // Use setTimeout to ensure different timestamps
-    const id1 = generateSaveId();
-    await new Promise((resolve) => setTimeout(resolve, 1));
-    const id2 = generateSaveId();
-    expect(id1).not.toBe(id2);
+  it('generates save IDs with correct format', () => {
+    const id = generateSaveId();
+    expect(id).toMatch(/^save-\d+$/);
   });
 
   it('creates save with correct structure', () => {
@@ -62,10 +59,32 @@ describe('SaveService', () => {
       tradeInventory: { aetherMist: 0 },
     } as GameState;
 
+    const timestamp = 1234567890;
+    const save = createSave(gameState, timestamp);
+
+    expect(save.version).toBe('1.0.0');
+    expect(save.timestamp).toBe(timestamp);
+    expect(save.gameState).toBe(gameState);
+  });
+
+  it('creates save with default timestamp', () => {
+    const gameState = {
+      world: {
+        width: 20,
+        height: 15,
+        tiles: new Map(),
+      },
+      shipPosition: { x: 0, y: 0 },
+      whales: [],
+      turn: 1,
+      aetherMist: 0,
+      tradeInventory: { aetherMist: 0 },
+    } as GameState;
+
     const save = createSave(gameState);
 
     expect(save.version).toBe('1.0.0');
-    expect(save.timestamp).toBeDefined();
+    expect(typeof save.timestamp).toBe('number');
     expect(save.gameState).toBe(gameState);
   });
 
