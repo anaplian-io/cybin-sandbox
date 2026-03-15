@@ -34,6 +34,7 @@ export function App({ gameState }: AppProps) {
   const [whaleStatusOpen, setWhaleStatusOpen] = React.useState(false);
   const [waystationMenuOpen, setWaystationMenuOpen] = React.useState(false);
   const [saveMenuOpen, setSaveMenuOpen] = React.useState(false);
+  const [selectedSlot, setSelectedSlot] = React.useState<number | null>(null);
   const [selectedWhaleIndex, setSelectedWhaleIndex] = React.useState<
     number | null
   >(null);
@@ -52,6 +53,7 @@ export function App({ gameState }: AppProps) {
         setWhaleStatusOpen(false);
         setWaystationMenuOpen(false);
         setSaveMenuOpen(false);
+        setSelectedSlot(null);
         setSelectedWhaleIndex(null);
         return;
       }
@@ -67,6 +69,7 @@ export function App({ gameState }: AppProps) {
 
       // Handle number keys 1-9 for slot selection in save menu
       if (saveMenuOpen && /^[1-9]$/.test(input)) {
+        setSelectedSlot(parseInt(input, 10));
         return;
       }
 
@@ -131,25 +134,33 @@ export function App({ gameState }: AppProps) {
           setWaystationMenuOpen(false);
         }
       } else if (saveMenuOpen) {
-        // Handle Enter on save menu - user selects slot via number keys
-        if (saveMenuItems[0].value === 'save' && /^[1-9]$/.test(input)) {
-          const slot = parseInt(input, 10);
+        // Handle Enter on save menu after slot selection
+        if (
+          input === '\r' &&
+          selectedSlot !== null &&
+          saveMenuItems[0].value === 'save'
+        ) {
           saveService
-            .save(`auto-${slot}`, currentState)
+            .save(`auto-${selectedSlot}`, currentState)
             .then(() => {
               setSaveMenuOpen(false);
+              setSelectedSlot(null);
             })
             .catch((err) => {
               console.error('Failed to save:', err);
             });
-        } else if (saveMenuItems[1].value === 'load' && /^[1-9]$/.test(input)) {
-          const slot = parseInt(input, 10);
+        } else if (
+          input === '\r' &&
+          selectedSlot !== null &&
+          saveMenuItems[1].value === 'load'
+        ) {
           saveService
-            .load(`auto-${slot}`)
+            .load(`auto-${selectedSlot}`)
             .then((loadedGame) => {
               if (loadedGame) {
                 setCurrentState(loadedGame);
                 setSaveMenuOpen(false);
+                setSelectedSlot(null);
               }
             })
             .catch((err) => {
@@ -383,7 +394,11 @@ export function App({ gameState }: AppProps) {
           <MenuDisplay
             title="Save System"
             items={saveMenuItems}
-            prompt={'Press number (1-9) for slot, ESC to cancel'}
+            prompt={
+              selectedSlot !== null
+                ? 'Press Enter to confirm, ESC to cancel'
+                : 'Press number (1-9) for slot, ESC to cancel'
+            }
           />
         </Box>
       )}
