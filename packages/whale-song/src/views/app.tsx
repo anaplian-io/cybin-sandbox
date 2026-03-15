@@ -31,6 +31,9 @@ export function App({ gameState }: AppProps) {
   const [breedingMenuOpen, setBreedingMenuOpen] = React.useState(false);
   const [whaleStatusOpen, setWhaleStatusOpen] = React.useState(false);
   const [waystationMenuOpen, setWaystationMenuOpen] = React.useState(false);
+  const [selectedWhaleIndex, setSelectedWhaleIndex] = React.useState<
+    number | null
+  >(null);
 
   useInput((input) => {
     if (breedingMenuOpen || whaleStatusOpen || waystationMenuOpen) {
@@ -39,9 +42,37 @@ export function App({ gameState }: AppProps) {
         setBreedingMenuOpen(false);
         setWhaleStatusOpen(false);
         setWaystationMenuOpen(false);
+        setSelectedWhaleIndex(null);
+        return;
       }
+
+      // Handle number keys 1-9 for whale selection in breeding menu
+      if (breedingMenuOpen && /^[1-9]$/.test(input)) {
+        const selectedIndex = parseInt(input, 10) - 1;
+        if (selectedIndex < currentState.whales.length) {
+          setSelectedWhaleIndex(selectedIndex);
+        }
+        return;
+      }
+
       // Handle Enter on breeding menu
       if (input === '\r' && breedingMenuOpen) {
+        // If we have a selected whale and fleet has ≥2 whales, breed
+        if (selectedWhaleIndex !== null && currentState.whales.length >= 2) {
+          // Find the other whale (not the selected one)
+          const otherIndex = selectedWhaleIndex === 0 ? 1 : 0;
+          const service = new GameService();
+          const newState = service.breedWhales(
+            currentState,
+            selectedWhaleIndex,
+            otherIndex,
+          );
+          setCurrentState(newState);
+          setBreedingMenuOpen(false);
+          setSelectedWhaleIndex(null);
+          return;
+        }
+
         // Perform the selected action
         if (
           breedingMenuItems[0].value === 'join' &&
@@ -64,15 +95,6 @@ export function App({ gameState }: AppProps) {
             whales: [...currentState.whales, newWhale],
             turn: currentState.turn + 1,
           });
-          setBreedingMenuOpen(false);
-        } else if (
-          breedingMenuItems[0].value === 'breed' &&
-          currentState.whales.length >= 2
-        ) {
-          // Breed two whales
-          const service = new GameService();
-          const newState = service.breedWhales(currentState, 0, 1);
-          setCurrentState(newState);
           setBreedingMenuOpen(false);
         }
       } else if (waystationMenuOpen) {
@@ -177,17 +199,14 @@ export function App({ gameState }: AppProps) {
       `${currentState.shipPosition.x},${currentState.shipPosition.y}`,
     )?.type === 'breedingGround';
 
-  // Breeding menu items - only show if you have whales
+  // Breeding menu items - show each whale when ≥2 whales exist
   const breedingMenuItems =
     currentState.whales.length >= 2
-      ? [
-          {
-            label: 'Breed whales',
-            value: 'breed',
-            description:
-              'Combine traits from your fleet to create new offspring',
-          },
-        ]
+      ? currentState.whales.map((whale, index) => ({
+          label: `Breed with ${whale.name}`,
+          value: `breed-${index}` as const,
+          description: `Select ${whale.name} as first parent`,
+        }))
       : currentState.whales.length === 1
         ? [
             {
@@ -290,11 +309,11 @@ export function App({ gameState }: AppProps) {
             title="Breeding Ground"
             items={breedingMenuItems}
             prompt={
-              currentState.whales.length === 0
-                ? 'Navigate with a wild pod first'
-                : breedingMenuItems[0].value === 'breed'
-                  ? 'Press number to select, ESC to cancel'
-                  : 'Press Enter to join fleet, ESC to cancel'
+              selectedWhaleIndex !== null
+                ? 'Select another whale to breed, ESC to cancel'
+                : currentState.whales.length === 0
+                  ? 'Navigate with a wild pod first'
+                  : 'Press number to select whale, ESC to cancel'
             }
           />
         </Box>
