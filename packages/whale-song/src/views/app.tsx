@@ -2,6 +2,8 @@ import React from 'react';
 import { Box, Text, useInput } from 'ink';
 import { GameService } from '../services/game.service.js';
 import { TradeService } from '../services/trade.service.js';
+import { SaveService } from '../services/save.service.js';
+import { FileSaveStorage } from '../storage/file-save-storage.js';
 import { MapDisplay } from './map.js';
 import { StatusDisplay } from './status.js';
 import { ControlsDisplay } from './controls.js';
@@ -31,9 +33,16 @@ export function App({ gameState }: AppProps) {
   const [breedingMenuOpen, setBreedingMenuOpen] = React.useState(false);
   const [whaleStatusOpen, setWhaleStatusOpen] = React.useState(false);
   const [waystationMenuOpen, setWaystationMenuOpen] = React.useState(false);
+  const [saveMenuOpen, setSaveMenuOpen] = React.useState(false);
   const [selectedWhaleIndex, setSelectedWhaleIndex] = React.useState<
     number | null
   >(null);
+
+  // Initialize save service
+  const saveService = React.useMemo(
+    () => new SaveService(new FileSaveStorage()),
+    [],
+  );
 
   useInput((input) => {
     if (breedingMenuOpen || whaleStatusOpen || waystationMenuOpen) {
@@ -42,6 +51,7 @@ export function App({ gameState }: AppProps) {
         setBreedingMenuOpen(false);
         setWhaleStatusOpen(false);
         setWaystationMenuOpen(false);
+        setSaveMenuOpen(false);
         setSelectedWhaleIndex(null);
         return;
       }
@@ -52,6 +62,11 @@ export function App({ gameState }: AppProps) {
         if (selectedIndex < currentState.whales.length) {
           setSelectedWhaleIndex(selectedIndex);
         }
+        return;
+      }
+
+      // Handle number keys 1-9 for slot selection in save menu
+      if (saveMenuOpen && /^[1-9]$/.test(input)) {
         return;
       }
 
@@ -115,6 +130,32 @@ export function App({ gameState }: AppProps) {
           setCurrentState(newState);
           setWaystationMenuOpen(false);
         }
+      } else if (saveMenuOpen) {
+        // Handle Enter on save menu - user selects slot via number keys
+        if (saveMenuItems[0].value === 'save' && /^[1-9]$/.test(input)) {
+          const slot = parseInt(input, 10);
+          saveService
+            .save(`auto-${slot}`, currentState)
+            .then(() => {
+              setSaveMenuOpen(false);
+            })
+            .catch((err) => {
+              console.error('Failed to save:', err);
+            });
+        } else if (saveMenuItems[1].value === 'load' && /^[1-9]$/.test(input)) {
+          const slot = parseInt(input, 10);
+          saveService
+            .load(`auto-${slot}`)
+            .then((loadedGame) => {
+              if (loadedGame) {
+                setCurrentState(loadedGame);
+                setSaveMenuOpen(false);
+              }
+            })
+            .catch((err) => {
+              console.error('Failed to load:', err);
+            });
+        }
       }
       return;
     }
@@ -143,6 +184,9 @@ export function App({ gameState }: AppProps) {
         break;
       case 'W':
         setWhaleStatusOpen(true);
+        return;
+      case 'S':
+        setSaveMenuOpen(true);
         return;
       case '\r': // Enter
         // Check if at breeding ground or waystation to open menu
@@ -237,6 +281,20 @@ export function App({ gameState }: AppProps) {
     },
   ];
 
+  // Save menu items
+  const saveMenuItems = [
+    {
+      label: 'Save Game',
+      value: 'save',
+      description: 'Save current progress to a slot',
+    },
+    {
+      label: 'Load Game',
+      value: 'load',
+      description: 'Restore game from a saved slot',
+    },
+  ];
+
   return (
     <Box flexDirection="column" height="100%">
       {/* Header: Game stats */}
@@ -315,6 +373,17 @@ export function App({ gameState }: AppProps) {
                   ? 'Navigate with a wild pod first'
                   : 'Press number to select whale, ESC to cancel'
             }
+          />
+        </Box>
+      )}
+
+      {/* Save menu modal (optional) */}
+      {saveMenuOpen && (
+        <Box borderStyle="single" borderColor="blue" paddingX={1} paddingY={0}>
+          <MenuDisplay
+            title="Save System"
+            items={saveMenuItems}
+            prompt={'Press number (1-9) for slot, ESC to cancel'}
           />
         </Box>
       )}
