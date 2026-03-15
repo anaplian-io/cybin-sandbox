@@ -14,6 +14,7 @@ describe('MapDisplay', () => {
       whales: [],
       turn: 1,
       aetherMist: 100,
+      tradeInventory: { aetherMist: 0 },
     };
 
     render(<MapDisplay gameState={gameState} />);
@@ -35,6 +36,7 @@ describe('MapDisplay', () => {
       whales: [],
       turn: 1,
       aetherMist: 100,
+      tradeInventory: { aetherMist: 0 },
     };
 
     render(<MapDisplay gameState={gameState} />);
@@ -55,6 +57,7 @@ describe('MapDisplay', () => {
       whales: [],
       turn: 1,
       aetherMist: 100,
+      tradeInventory: { aetherMist: 0 },
     };
 
     render(<MapDisplay gameState={gameState} />);
@@ -75,6 +78,7 @@ describe('MapDisplay', () => {
       whales: [],
       turn: 1,
       aetherMist: 100,
+      tradeInventory: { aetherMist: 0 },
     };
 
     render(<MapDisplay gameState={gameState} />);
@@ -93,6 +97,7 @@ describe('MapDisplay', () => {
       whales: [],
       turn: 1,
       aetherMist: 100,
+      tradeInventory: { aetherMist: 0 },
     };
 
     render(<MapDisplay gameState={gameState} />);

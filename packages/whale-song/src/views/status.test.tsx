@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import StatusDisplay from './status.js';
+import type { SeasonName } from '../types/season.js';
 
 describe('StatusDisplay', () => {
   it('renders all status fields with season state', () => {
@@ -23,10 +24,11 @@ describe('StatusDisplay', () => {
       turn: 5,
       aetherMist: 200,
       seasonState: {
-        currentSeason: 'spring',
+        currentSeason: 'spring' as SeasonName,
         turnInSeason: 12,
         totalTurnsInCycle: 80,
       },
+      tradeInventory: { aetherMist: 0 },
     };
 
     render(<StatusDisplay gameState={gameState} />);
@@ -50,6 +52,7 @@ describe('StatusDisplay', () => {
       turn: 5,
       aetherMist: 200,
       seasonState: undefined,
+      tradeInventory: { aetherMist: 0 },
     };
 
     render(<StatusDisplay gameState={gameState} />);
