@@ -25,7 +25,7 @@ export default defineConfig({
         'src/constants/**',
         'src/data/**',
         'src/types/**',
-        'src/views/**/*.tsx', // Ink view components (UI glue, tested manually)
+        'src/views/app.tsx', // Main app logic (input handlers tested manually)
       ],
     },
   },
