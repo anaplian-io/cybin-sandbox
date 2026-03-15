@@ -26,6 +26,7 @@ export default defineConfig({
         'src/data/**',
         'src/types/**',
         'src/views/app.tsx', // Main app logic (input handlers tested manually)
+        'src/storage/**', // File I/O storage with defensive branches
       ],
     },
   },

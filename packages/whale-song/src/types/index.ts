@@ -32,5 +32,7 @@ export type {
   SeasonState,
 } from './season.js';
 
+export type { SaveGame, SaveSlot, SaveSlotList } from './save.js';
+
 export type { Faction } from '../constants/factions.js';
 export { FACTIONS } from '../constants/factions.js';
