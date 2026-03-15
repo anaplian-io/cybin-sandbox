@@ -309,11 +309,11 @@ export function App({ gameState }: AppProps) {
             title="Breeding Ground"
             items={breedingMenuItems}
             prompt={
-              currentState.whales.length === 0
-                ? 'Navigate with a wild pod first'
-                : breedingMenuItems[0].value === 'breed'
-                  ? 'Press number to select, ESC to cancel'
-                  : 'Press Enter to join fleet, ESC to cancel'
+              selectedWhaleIndex !== null
+                ? 'Select another whale to breed, ESC to cancel'
+                : currentState.whales.length === 0
+                  ? 'Navigate with a wild pod first'
+                  : 'Press number to select whale, ESC to cancel'
             }
           />
         </Box>
